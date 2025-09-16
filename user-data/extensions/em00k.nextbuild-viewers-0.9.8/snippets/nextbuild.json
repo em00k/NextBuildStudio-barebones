@@ -1,0 +1,2624 @@
+{
+  "'!heap": {
+    "prefix": "'!heap",
+    "body": [
+      "'!heap={$1}",
+      ""
+    ],
+    "description": "Sets the amount of RAM used for the HEAP, must be at the start of the program."
+  },
+  "ALTERNATE_ROM_NR_8C": {
+    "prefix": "ALTERNATE_ROM_NR_8C",
+    "body": [
+      "ALTERNATE_ROM_NR_8C",
+      ""
+    ],
+    "description": "ALTERNATE_ROM_NR_8C      equ $8C"
+  },
+  "ANTI_BRICK_NR_10": {
+    "prefix": "ANTI_BRICK_NR_10",
+    "body": [
+      "ANTI_BRICK_NR_10",
+      ""
+    ],
+    "description": "ANTI_BRICK_NR_10      equ $10"
+  },
+  "ASM": {
+    "prefix": "asm",
+    "body": [
+      "asm",
+      "\t$0",
+      "end asm",
+      ""
+    ],
+    "description": "Create an asm block"
+  },
+  "AYFX & Music Interrupt": {
+    "prefix": "Template",
+    "body": [
+      "",
+      "' -- Load block ",
+      "LoadSDBank(\"music.pt3\",0,0,0,${1|34:line}) \t\t\t\t' load music.pt3 into bank 34",
+      "LoadSDBank(\"vt24000.bin\",0,0,0,33) \t\t\t\t' load the music replayer into bank 33",
+      "' -- ",
+      "",
+      "InitSFX(36)\t\t\t\t\t\t\t            ' init the SFX engine, sfx are in bank 36",
+      "InitMusic(${2|34},$1,0000)\t\t\t\t            ' init the music engine 33 has the player, 34 the pt3, 0000 the offset in bank 34",
+      "SetUpIM()\t\t\t\t\t\t\t            ' init the IM2 code ",
+      "EnableSFX\t\t\t\t\t\t\t            ' Enables the AYFX, use DisableSFX to top",
+      "EnableMusic \t\t\t\t\t\t            ' Enables Music, use DisableMusic to stop ",
+      "'PlaySFX(nr)                                    ' Plays SFX ",
+      ""
+    ],
+    "description": "This code will produce a code block for uysing Shiru's AYFX and playing PT3 files on interrupt. The interrupt is dynamically created."
+  },
+  "AY_DATA_P_BFFD": {
+    "prefix": "AY_DATA_P_BFFD",
+    "body": [
+      "AY_DATA_P_BFFD",
+      ""
+    ],
+    "description": "AY_DATA_P_BFFD      equ $BFFD"
+  },
+  "AY_REG_P_FFFD": {
+    "prefix": "AY_REG_P_FFFD",
+    "body": [
+      "AY_REG_P_FFFD",
+      ""
+    ],
+    "description": "AY_REG_P_FFFD      equ $FFFD"
+  },
+  "BBREAK - Basic breakpoint": {
+    "prefix": "BBREAK",
+    "body": [
+      "BBREAK",
+      ""
+    ],
+    "description": "Sets a CSpect breakpoint, will be ignored on real hw.\n\n**For use in an basic block, for asm use **BREAK**"
+  },
+  "BIT_DOWN": {
+    "prefix": "BIT_DOWN",
+    "body": [
+      "BIT_DOWN",
+      ""
+    ],
+    "description": "BIT_DOWN      equ 5"
+  },
+  "BIT_LEFT": {
+    "prefix": "BIT_LEFT",
+    "body": [
+      "BIT_LEFT",
+      ""
+    ],
+    "description": "BIT_LEFT      equ 6"
+  },
+  "BIT_RIGHT": {
+    "prefix": "BIT_RIGHT",
+    "body": [
+      "BIT_RIGHT",
+      ""
+    ],
+    "description": "BIT_RIGHT      equ 7"
+  },
+  "BIT_UP": {
+    "prefix": "BIT_UP",
+    "body": [
+      "BIT_UP",
+      ""
+    ],
+    "description": "BIT_UP      equ 4"
+  },
+  "BREAK - ASM breakpoint": {
+    "prefix": "BREAK",
+    "body": [
+      "BREAK",
+      ""
+    ],
+    "description": "Sets a CSpect breakpoint, will be ignored on real hw.\n\n**For use in an ASM block, for basic use **BBREAK**"
+  },
+  "CLIP_LAYER2_NR_18": {
+    "prefix": "CLIP_LAYER2_NR_18",
+    "body": [
+      "CLIP_LAYER2_NR_18",
+      ""
+    ],
+    "description": "CLIP_LAYER2_NR_18      equ $18"
+  },
+  "CLIP_SPRITE_NR_19": {
+    "prefix": "CLIP_SPRITE_NR_19",
+    "body": [
+      "CLIP_SPRITE_NR_19",
+      ""
+    ],
+    "description": "CLIP_SPRITE_NR_19      equ $19"
+  },
+  "CLIP_TILEMAP_NR_1B": {
+    "prefix": "CLIP_TILEMAP_NR_1B",
+    "body": [
+      "CLIP_TILEMAP_NR_1B",
+      ""
+    ],
+    "description": "CLIP_TILEMAP_NR_1B      equ $1B"
+  },
+  "CLIP_ULA_LORES_NR_1A": {
+    "prefix": "CLIP_ULA_LORES_NR_1A",
+    "body": [
+      "CLIP_ULA_LORES_NR_1A",
+      ""
+    ],
+    "description": "CLIP_ULA_LORES_NR_1A      equ $1A"
+  },
+  "CLIP_WINDOW_CONTROL_NR_1C": {
+    "prefix": "CLIP_WINDOW_CONTROL_NR_1C",
+    "body": [
+      "CLIP_WINDOW_CONTROL_NR_1C",
+      ""
+    ],
+    "description": "CLIP_WINDOW_CONTROL_NR_1C      equ $1C"
+  },
+  "CLS": {
+    "prefix": "CLS",
+    "body": [
+      "CLS",
+      ""
+    ],
+    "description": "Clear ULA screen"
+  },
+  "CLS256(colour)": {
+    "prefix": "CLS256",
+    "body": [
+      "CLS256(${1:n})",
+      ""
+    ],
+    "description": "Clear Layer 2 with n colour"
+  },
+  "COPPER_CONTROL_HI_NR_62": {
+    "prefix": "COPPER_CONTROL_HI_NR_62",
+    "body": [
+      "COPPER_CONTROL_HI_NR_62",
+      ""
+    ],
+    "description": "COPPER_CONTROL_HI_NR_62      equ $62"
+  },
+  "COPPER_CONTROL_LO_NR_61": {
+    "prefix": "COPPER_CONTROL_LO_NR_61",
+    "body": [
+      "COPPER_CONTROL_LO_NR_61",
+      ""
+    ],
+    "description": "COPPER_CONTROL_LO_NR_61      equ $61"
+  },
+  "COPPER_DATA_16B_NR_63": {
+    "prefix": "COPPER_DATA_16B_NR_63",
+    "body": [
+      "COPPER_DATA_16B_NR_63",
+      ""
+    ],
+    "description": "COPPER_DATA_16B_NR_63      equ $63"
+  },
+  "COPPER_DATA_NR_60": {
+    "prefix": "COPPER_DATA_NR_60",
+    "body": [
+      "COPPER_DATA_NR_60",
+      ""
+    ],
+    "description": "COPPER_DATA_NR_60      equ $60"
+  },
+  "COPPER_HALT_B": {
+    "prefix": "COPPER_HALT_B",
+    "body": [
+      "COPPER_HALT_B",
+      ""
+    ],
+    "description": "COPPER_HALT_B      equ $FF"
+  },
+  "COPPER_NOOP": {
+    "prefix": "COPPER_NOOP",
+    "body": [
+      "COPPER_NOOP",
+      ""
+    ],
+    "description": "COPPER_NOOP      equ %00000000"
+  },
+  "COPPER_WAIT_H": {
+    "prefix": "COPPER_WAIT_H",
+    "body": [
+      "COPPER_WAIT_H",
+      ""
+    ],
+    "description": "COPPER_WAIT_H      equ %10000000"
+  },
+  "ClipLayer2(x1,x2,y1,y2)": {
+    "prefix": "ClipLayer2",
+    "body": [
+      "ClipLayer2(${1:0},${2:255},${3:0},${4:255})",
+      "$0",
+      ""
+    ],
+    "description": "Sets visible clipping of Layer2"
+  },
+  "ClipSprite(x1,x2,y1,y2)": {
+    "prefix": "ClipSprite",
+    "body": [
+      "ClipSprite(${1:0},${2:255},${3:0},${4:255})",
+      ""
+    ],
+    "description": "Clips the visible area for sprites"
+  },
+  "ClipTile(x1,x2,y1,y2)": {
+    "prefix": "ClipTile",
+    "body": [
+      "ClipTile(${1:0},${2:255},${3:0},${4:255})",
+      ""
+    ],
+    "description": "Sets visible clipping of the HW tilemap, nb X is doubled to support 320x256"
+  },
+  "ClipULA(x1,x2,y1,y2)": {
+    "prefix": "ClipULA",
+    "body": [
+      "ClipULA(${1:0},${2:255},${3:0},${4:255})",
+      ""
+    ],
+    "description": "Sets visible clipping of the ULA"
+  },
+  "Command Line": {
+    "prefix": "!cmd",
+    "body": [
+      "'!cmd=C:\\NextBuildv8\\Emu\\CSpect\\hdfmonkey.exe put /cygdrive/d/hdmfg2/img/cspect-next-2gb.img explorer.bin /",
+      ""
+    ],
+    "description": "Example cmd line to run after compile"
+  },
+  "Comment Block": {
+    "prefix": "cmt",
+    "body": [
+      "'----------------------------------------------------------",
+      "' ${1:comment}",
+      "'",
+      "$2",
+      ""
+    ],
+    "description": "Adds a comment block"
+  },
+  "Copy BIN": {
+    "prefix": "!bin",
+    "body": [
+      "'!bin=d:/test/file.bin",
+      ""
+    ],
+    "description": "Copies the binary file to a location"
+  },
+  "Copy File": {
+    "prefix": "!copy",
+    "body": [
+      "'!copy=d:/test/file.nex",
+      ""
+    ],
+    "description": "Copies the final NEX to a location"
+  },
+  "Creat ASM fiel": {
+    "prefix": "!asm",
+    "body": [
+      "'!asm",
+      ""
+    ],
+    "description": "Compiles the output to an ASM file"
+  },
+  "DAC_AD_MIRROR_NR_2D": {
+    "prefix": "DAC_AD_MIRROR_NR_2D",
+    "body": [
+      "DAC_AD_MIRROR_NR_2D",
+      ""
+    ],
+    "description": "DAC_AD_MIRROR_NR_2D      equ $2D"
+  },
+  "DAC_B_MIRROR_NR_2C": {
+    "prefix": "DAC_B_MIRROR_NR_2C",
+    "body": [
+      "DAC_B_MIRROR_NR_2C",
+      ""
+    ],
+    "description": "DAC_B_MIRROR_NR_2C      equ $2C"
+  },
+  "DAC_COVOX_INDEX": {
+    "prefix": "DAC_COVOX_INDEX",
+    "body": [
+      "DAC_COVOX_INDEX",
+      ""
+    ],
+    "description": "DAC_COVOX_INDEX      equ 6"
+  },
+  "DAC_C_MIRROR_NR_2E": {
+    "prefix": "DAC_C_MIRROR_NR_2E",
+    "body": [
+      "DAC_C_MIRROR_NR_2E",
+      ""
+    ],
+    "description": "DAC_C_MIRROR_NR_2E      equ $2E"
+  },
+  "DAC_GS_COVOX_INDEX": {
+    "prefix": "DAC_GS_COVOX_INDEX",
+    "body": [
+      "DAC_GS_COVOX_INDEX",
+      ""
+    ],
+    "description": "DAC_GS_COVOX_INDEX      equ 1"
+  },
+  "DAC_PENTAGON_ATM_INDEX": {
+    "prefix": "DAC_PENTAGON_ATM_INDEX",
+    "body": [
+      "DAC_PENTAGON_ATM_INDEX",
+      ""
+    ],
+    "description": "DAC_PENTAGON_ATM_INDEX      equ 2"
+  },
+  "DAC_PROFI_COVOX_INDEX": {
+    "prefix": "DAC_PROFI_COVOX_INDEX",
+    "body": [
+      "DAC_PROFI_COVOX_INDEX",
+      ""
+    ],
+    "description": "DAC_PROFI_COVOX_INDEX      equ 7"
+  },
+  "DAC_SOUNDRIVE1_INDEX": {
+    "prefix": "DAC_SOUNDRIVE1_INDEX",
+    "body": [
+      "DAC_SOUNDRIVE1_INDEX",
+      ""
+    ],
+    "description": "DAC_SOUNDRIVE1_INDEX      equ 4"
+  },
+  "DAC_SOUNDRIVE2_INDEX": {
+    "prefix": "DAC_SOUNDRIVE2_INDEX",
+    "body": [
+      "DAC_SOUNDRIVE2_INDEX",
+      ""
+    ],
+    "description": "DAC_SOUNDRIVE2_INDEX      equ 5"
+  },
+  "DAC_SPECDRUM_INDEX": {
+    "prefix": "DAC_SPECDRUM_INDEX",
+    "body": [
+      "DAC_SPECDRUM_INDEX",
+      ""
+    ],
+    "description": "DAC_SPECDRUM_INDEX      equ 3"
+  },
+  "DATA a,b,c....": {
+    "prefix": "DATA",
+    "body": [
+      "\tDATA ${1:n}",
+      ""
+    ],
+    "description": "DATA statement : eg DATA 1,2,3,4,5,\"HELLO\""
+  },
+  "DEBUG_LED_CONTROL_NR_FF": {
+    "prefix": "DEBUG_LED_CONTROL_NR_FF",
+    "body": [
+      "DEBUG_LED_CONTROL_NR_FF",
+      ""
+    ],
+    "description": "DEBUG_LED_CONTROL_NR_FF      equ $FF"
+  },
+  "DIR_DOWN": {
+    "prefix": "DIR_DOWN",
+    "body": [
+      "DIR_DOWN",
+      ""
+    ],
+    "description": "DIR_DOWN      equ %00100000"
+  },
+  "DIR_DOWN_I": {
+    "prefix": "DIR_DOWN_I",
+    "body": [
+      "DIR_DOWN_I",
+      ""
+    ],
+    "description": "DIR_DOWN_I      equ %11011111"
+  },
+  "DIR_LEFT": {
+    "prefix": "DIR_LEFT",
+    "body": [
+      "DIR_LEFT",
+      ""
+    ],
+    "description": "DIR_LEFT      equ %01000000"
+  },
+  "DIR_LEFT_I": {
+    "prefix": "DIR_LEFT_I",
+    "body": [
+      "DIR_LEFT_I",
+      ""
+    ],
+    "description": "DIR_LEFT_I      equ %10111111"
+  },
+  "DIR_NONE": {
+    "prefix": "DIR_NONE",
+    "body": [
+      "DIR_NONE",
+      ""
+    ],
+    "description": "DIR_NONE      equ %00000000"
+  },
+  "DIR_RIGHT": {
+    "prefix": "DIR_RIGHT",
+    "body": [
+      "DIR_RIGHT",
+      ""
+    ],
+    "description": "DIR_RIGHT      equ %10000000"
+  },
+  "DIR_RIGHT_I": {
+    "prefix": "DIR_RIGHT_I",
+    "body": [
+      "DIR_RIGHT_I",
+      ""
+    ],
+    "description": "DIR_RIGHT_I      equ %01111111"
+  },
+  "DIR_UP": {
+    "prefix": "DIR_UP",
+    "body": [
+      "DIR_UP",
+      ""
+    ],
+    "description": "DIR_UP      equ %00010000"
+  },
+  "DIR_UP_I": {
+    "prefix": "DIR_UP_I",
+    "body": [
+      "DIR_UP_I",
+      ""
+    ],
+    "description": "DIR_UP_I      equ %11101111"
+  },
+  "DISPLAY_CONTROL_NR_69": {
+    "prefix": "DISPLAY_CONTROL_NR_69",
+    "body": [
+      "DISPLAY_CONTROL_NR_69",
+      ""
+    ],
+    "description": "DISPLAY_CONTROL_NR_69      equ $69"
+  },
+  "DIVMMC_CONTROL_P_E3": {
+    "prefix": "DIVMMC_CONTROL_P_E3",
+    "body": [
+      "DIVMMC_CONTROL_P_E3",
+      ""
+    ],
+    "description": "DIVMMC_CONTROL_P_E3      equ $E3"
+  },
+  "DMA_CONTINUE": {
+    "prefix": "DMA_CONTINUE",
+    "body": [
+      "DMA_CONTINUE",
+      ""
+    ],
+    "description": "DMA_CONTINUE      equ $D3"
+  },
+  "DMA_DISABLE": {
+    "prefix": "DMA_DISABLE",
+    "body": [
+      "DMA_DISABLE",
+      ""
+    ],
+    "description": "DMA_DISABLE      equ $83"
+  },
+  "DMA_DISABLE_INTERUPTS": {
+    "prefix": "DMA_DISABLE_INTERUPTS",
+    "body": [
+      "DMA_DISABLE_INTERUPTS",
+      ""
+    ],
+    "description": "DMA_DISABLE_INTERUPTS      equ $AF"
+  },
+  "DMA_ENABLE": {
+    "prefix": "DMA_ENABLE",
+    "body": [
+      "DMA_ENABLE",
+      ""
+    ],
+    "description": "DMA_ENABLE      equ $87"
+  },
+  "DMA_ENABLE_AFTER_RETI": {
+    "prefix": "DMA_ENABLE_AFTER_RETI",
+    "body": [
+      "DMA_ENABLE_AFTER_RETI",
+      ""
+    ],
+    "description": "DMA_ENABLE_AFTER_RETI      equ $B7"
+  },
+  "DMA_ENABLE_INTERUPTS": {
+    "prefix": "DMA_ENABLE_INTERUPTS",
+    "body": [
+      "DMA_ENABLE_INTERUPTS",
+      ""
+    ],
+    "description": "DMA_ENABLE_INTERUPTS      equ $AB"
+  },
+  "DMA_FORCE_READY": {
+    "prefix": "DMA_FORCE_READY",
+    "body": [
+      "DMA_FORCE_READY",
+      ""
+    ],
+    "description": "DMA_FORCE_READY      equ $B3"
+  },
+  "DMA_LOAD": {
+    "prefix": "DMA_LOAD",
+    "body": [
+      "DMA_LOAD",
+      ""
+    ],
+    "description": "DMA_LOAD      equ $CF"
+  },
+  "DMA_READ_MASK_FOLLOWS": {
+    "prefix": "DMA_READ_MASK_FOLLOWS",
+    "body": [
+      "DMA_READ_MASK_FOLLOWS",
+      ""
+    ],
+    "description": "DMA_READ_MASK_FOLLOWS      equ $BB"
+  },
+  "DMA_READ_STATUS_BYTE": {
+    "prefix": "DMA_READ_STATUS_BYTE",
+    "body": [
+      "DMA_READ_STATUS_BYTE",
+      ""
+    ],
+    "description": "DMA_READ_STATUS_BYTE      equ $BF"
+  },
+  "DMA_REINIT_STATUS_BYTE": {
+    "prefix": "DMA_REINIT_STATUS_BYTE",
+    "body": [
+      "DMA_REINIT_STATUS_BYTE",
+      ""
+    ],
+    "description": "DMA_REINIT_STATUS_BYTE      equ $8B"
+  },
+  "DMA_RESET": {
+    "prefix": "DMA_RESET",
+    "body": [
+      "DMA_RESET",
+      ""
+    ],
+    "description": "DMA_RESET      equ $C3"
+  },
+  "DMA_RESET_DISABLE_INTERUPTS": {
+    "prefix": "DMA_RESET_DISABLE_INTERUPTS",
+    "body": [
+      "DMA_RESET_DISABLE_INTERUPTS",
+      ""
+    ],
+    "description": "DMA_RESET_DISABLE_INTERUPTS      equ $A3"
+  },
+  "DMA_RESET_PORT_A_TIMING": {
+    "prefix": "DMA_RESET_PORT_A_TIMING",
+    "body": [
+      "DMA_RESET_PORT_A_TIMING",
+      ""
+    ],
+    "description": "DMA_RESET_PORT_A_TIMING      equ $C7"
+  },
+  "DMA_RESET_PORT_B_TIMING": {
+    "prefix": "DMA_RESET_PORT_B_TIMING",
+    "body": [
+      "DMA_RESET_PORT_B_TIMING",
+      ""
+    ],
+    "description": "DMA_RESET_PORT_B_TIMING      equ $CB"
+  },
+  "DMA_START_READ_SEQUENCE": {
+    "prefix": "DMA_START_READ_SEQUENCE",
+    "body": [
+      "DMA_START_READ_SEQUENCE",
+      ""
+    ],
+    "description": "DMA_START_READ_SEQUENCE      equ $A7"
+  },
+  "Dim var AS type AT ": {
+    "prefix": "Dim",
+    "body": [
+      "Dim ${1:var} as ${2|ubyte,uinteger,float,fixed,ulong|}",
+      ""
+    ],
+    "description": "Defines a global variable of type"
+  },
+  "DisableMusic": {
+    "prefix": "DisableMusic",
+    "body": [
+      "DisableMusic ",
+      ""
+    ],
+    "description": "Disables Music in the interrupt initiated with SetUpIM()"
+  },
+  "DisableSFX": {
+    "prefix": "DisableSFX",
+    "body": [
+      "DisableSFX ",
+      ""
+    ],
+    "description": "Disables SFX in the interrupt initiated with SetUpIM()"
+  },
+  "DoTile8(X,Y,Tile)": {
+    "prefix": "DoTile8",
+    "body": [
+      "DoTile8(${1:x},${2:y},${3:tile})",
+      ""
+    ],
+    "description": "Draw a 256 colour 8x8px tile at x,y on Layer2 256x192"
+  },
+  "DoTileBank16(X,Y,Tile,Bank)": {
+    "prefix": "DoTileBank16",
+    "body": [
+      "DoTileBank16(${1:x},${2:y},${3:tile},${4:bank})",
+      ""
+    ],
+    "description": "Draw a 256 colour 16x16px tile from bank at x,y on Layer2 256x192.\n\nMax tile number = 256"
+  },
+  "DoTileBank8(X,Y,Tile,Bank)": {
+    "prefix": "DoTileBank8",
+    "body": [
+      "DoTileBank8(${1:x},${2:y},${3:tile},${4:bank})",
+      ""
+    ],
+    "description": "Draw a 256 colour 8x8px tile from bank at x,y on Layer2 256x192.\n\nMax tile number = 256"
+  },
+  "DoTile(X,Y,Tile)": {
+    "prefix": "DoTile",
+    "body": [
+      "DoTile(${1:x},${2:y},${3:tile})",
+      ""
+    ],
+    "description": "Draw a 256 colour 16x16px tile at x,y on Layer2 256x192"
+  },
+  "DrawImage(X, Y, *Image, frame, transparent)": {
+    "prefix": "DrawImage",
+    "body": [
+      "DrawImage(${1:x},${2:y},${3:*Image},${4:frame},${5:transparent})",
+      ""
+    ],
+    "description": "Draw an image at x,y on Layer2 256x192.\n\n*Image is a pointer to the image data.\nframe is the frame to draw.\ntransparent is the transparent colour."
+  },
+  "ESP_WIFI_GPIO_NR_A9": {
+    "prefix": "ESP_WIFI_GPIO_NR_A9",
+    "body": [
+      "ESP_WIFI_GPIO_NR_A9",
+      ""
+    ],
+    "description": "ESP_WIFI_GPIO_NR_A9      equ $A9"
+  },
+  "ESP_WIFI_GPIO_OUTPUT_NR_A8": {
+    "prefix": "ESP_WIFI_GPIO_OUTPUT_NR_A8",
+    "body": [
+      "ESP_WIFI_GPIO_OUTPUT_NR_A8",
+      ""
+    ],
+    "description": "ESP_WIFI_GPIO_OUTPUT_NR_A8      equ $A8"
+  },
+  "EXPANSION_BUS_CONTROL_NR_81": {
+    "prefix": "EXPANSION_BUS_CONTROL_NR_81",
+    "body": [
+      "EXPANSION_BUS_CONTROL_NR_81",
+      ""
+    ],
+    "description": "EXPANSION_BUS_CONTROL_NR_81      equ $81"
+  },
+  "EXPANSION_BUS_DECODING_0_NR_86": {
+    "prefix": "EXPANSION_BUS_DECODING_0_NR_86",
+    "body": [
+      "EXPANSION_BUS_DECODING_0_NR_86",
+      ""
+    ],
+    "description": "EXPANSION_BUS_DECODING_0_NR_86      equ $86"
+  },
+  "EXPANSION_BUS_DECODING_1_NR_87": {
+    "prefix": "EXPANSION_BUS_DECODING_1_NR_87",
+    "body": [
+      "EXPANSION_BUS_DECODING_1_NR_87",
+      ""
+    ],
+    "description": "EXPANSION_BUS_DECODING_1_NR_87      equ $87"
+  },
+  "EXPANSION_BUS_DECODING_2_NR_88": {
+    "prefix": "EXPANSION_BUS_DECODING_2_NR_88",
+    "body": [
+      "EXPANSION_BUS_DECODING_2_NR_88",
+      ""
+    ],
+    "description": "EXPANSION_BUS_DECODING_2_NR_88      equ $88"
+  },
+  "EXPANSION_BUS_DECODING_3_NR_89": {
+    "prefix": "EXPANSION_BUS_DECODING_3_NR_89",
+    "body": [
+      "EXPANSION_BUS_DECODING_3_NR_89",
+      ""
+    ],
+    "description": "EXPANSION_BUS_DECODING_3_NR_89      equ $89"
+  },
+  "EXPANSION_BUS_ENABLE_NR_80": {
+    "prefix": "EXPANSION_BUS_ENABLE_NR_80",
+    "body": [
+      "EXPANSION_BUS_ENABLE_NR_80",
+      ""
+    ],
+    "description": "EXPANSION_BUS_ENABLE_NR_80      equ $80"
+  },
+  "EXPANSION_BUS_PROPAGATE_NR_8A": {
+    "prefix": "EXPANSION_BUS_PROPAGATE_NR_8A",
+    "body": [
+      "EXPANSION_BUS_PROPAGATE_NR_8A",
+      ""
+    ],
+    "description": "EXPANSION_BUS_PROPAGATE_NR_8A      equ $8A"
+  },
+  "EXTENDED_KEYS_0_NR_B0": {
+    "prefix": "EXTENDED_KEYS_0_NR_B0",
+    "body": [
+      "EXTENDED_KEYS_0_NR_B0",
+      ""
+    ],
+    "description": "EXTENDED_KEYS_0_NR_B0      equ $B0"
+  },
+  "EXTENDED_KEYS_1_NR_B1": {
+    "prefix": "EXTENDED_KEYS_1_NR_B1",
+    "body": [
+      "EXTENDED_KEYS_1_NR_B1",
+      ""
+    ],
+    "description": "EXTENDED_KEYS_1_NR_B1      equ $B1"
+  },
+  "EnableMusic": {
+    "prefix": "EnableMusic",
+    "body": [
+      "EnableMusic ",
+      ""
+    ],
+    "description": "Enable Music in the interrupt initiated with SetUpIM()"
+  },
+  "EnableSFX": {
+    "prefix": "EnableSFX",
+    "body": [
+      "EnableSFX ",
+      ""
+    ],
+    "description": "Enables SFX in the interrupt initiated with SetUpIM()"
+  },
+  "EnableShadow()": {
+    "prefix": "EnableShadow",
+    "body": [
+      "EnableShadow()",
+      ""
+    ],
+    "description": "Enables drawing to shadow L2"
+  },
+  "FDoTile16(Tile,X,Y,Bank)": {
+    "prefix": "FDoTile16",
+    "body": [
+      "FDoTile16(${1:tile},${2:x},${3:y},${4:bank})",
+      ""
+    ],
+    "description": "Draw a 256 colour 16x16px tile from\nbank at x,y on Layer2 320x256. Max tile number = 256"
+  },
+  "FDoTile8(Tile,X,Y,Bank)": {
+    "prefix": "FDoTile8",
+    "body": [
+      "FDoTile8(${1:tile},${2:x},${3:y},${4:bank})",
+      ""
+    ],
+    "description": "Draw a 256 colour 8x8px tile from\nbank at x,y on Layer2 320x256. Max tile number = 256"
+  },
+  "FL2Text(X,Y,String,Bank)": {
+    "prefix": "FL2Text",
+    "body": [
+      "FL2Text(${1:x},${2:y},${3:string},${4:bank})",
+      ""
+    ],
+    "description": "Draw text on L2 320x256 with 8x8 font in bank"
+  },
+  "FOR Loop": {
+    "prefix": "for",
+    "body": [
+      "FOR ${1:variable} = ${2:start} TO ${3:end}${4: STEP ${5:increment}}",
+      "\t${6:REM code here}",
+      "NEXT ${1:variable}",
+      ""
+    ],
+    "description": "FOR...TO...NEXT loop"
+  },
+  "FPlotL2(X,Y,String,Bank)": {
+    "prefix": "FPlotL2",
+    "body": [
+      "FPlotL2(${1:y},${2:x},${3:colour})",
+      ""
+    ],
+    "description": "Plot pixel on L2 320x256 with colour"
+  },
+  "FreeBank(bank)": {
+    "prefix": "FreeBank",
+    "body": [
+      "FreeBank(${1:bank})",
+      ""
+    ],
+    "description": "Free bank thank that was obtained with ReserveBank()"
+  },
+  "GLOBAL_TRANSPARENCY_NR_14": {
+    "prefix": "GLOBAL_TRANSPARENCY_NR_14",
+    "body": [
+      "GLOBAL_TRANSPARENCY_NR_14",
+      ""
+    ],
+    "description": "GLOBAL_TRANSPARENCY_NR_14      equ $14"
+  },
+  "GetKeyScanCode()=nn": {
+    "prefix": "GetKeyScanCode",
+    "body": [
+      "GetKeyScanCode()=",
+      ""
+    ],
+    "description": "Returns scancode if key is press otherwise 0. You will need keys.bas include"
+  },
+  "GetReg(register)": {
+    "prefix": "GetReg",
+    "body": [
+      "GetReg(${1:reg})",
+      ""
+    ],
+    "description": "byte = GetReg(register)"
+  },
+  "HIGH_ADDRESS_KEYMAP_NR_28": {
+    "prefix": "HIGH_ADDRESS_KEYMAP_NR_28",
+    "body": [
+      "HIGH_ADDRESS_KEYMAP_NR_28",
+      ""
+    ],
+    "description": "HIGH_ADDRESS_KEYMAP_NR_28      equ $28"
+  },
+  "HIGH_DATA_TO_KEYMAP_NR_2A": {
+    "prefix": "HIGH_DATA_TO_KEYMAP_NR_2A",
+    "body": [
+      "HIGH_DATA_TO_KEYMAP_NR_2A",
+      ""
+    ],
+    "description": "HIGH_DATA_TO_KEYMAP_NR_2A      equ $2A"
+  },
+  "I2C_SCL_P_103B": {
+    "prefix": "I2C_SCL_P_103B",
+    "body": [
+      "I2C_SCL_P_103B",
+      ""
+    ],
+    "description": "I2C_SCL_P_103B      equ $103B"
+  },
+  "I2C_SDA_P_113B": {
+    "prefix": "I2C_SDA_P_113B",
+    "body": [
+      "I2C_SDA_P_113B",
+      ""
+    ],
+    "description": "I2C_SDA_P_113B      equ $113B"
+  },
+  "IF Statement": {
+    "prefix": "if",
+    "body": [
+      "IF ${1:condition} THEN",
+      "\t${2:REM code here}",
+      "END IF",
+      ""
+    ],
+    "description": "IF...THEN...END IF block"
+  },
+  "INTEGER": {
+    "prefix": "INTEGER",
+    "body": [
+      "INTEGER",
+      ""
+    ],
+    "description": "INTEGER is signed -32767 - +32767, 2bytes"
+  },
+  "INTERNAL_PORT_DECODING_0_NR_82": {
+    "prefix": "INTERNAL_PORT_DECODING_0_NR_82",
+    "body": [
+      "INTERNAL_PORT_DECODING_0_NR_82",
+      ""
+    ],
+    "description": "INTERNAL_PORT_DECODING_0_NR_82      equ $82"
+  },
+  "INTERNAL_PORT_DECODING_1_NR_83": {
+    "prefix": "INTERNAL_PORT_DECODING_1_NR_83",
+    "body": [
+      "INTERNAL_PORT_DECODING_1_NR_83",
+      ""
+    ],
+    "description": "INTERNAL_PORT_DECODING_1_NR_83      equ $83"
+  },
+  "INTERNAL_PORT_DECODING_2_NR_84": {
+    "prefix": "INTERNAL_PORT_DECODING_2_NR_84",
+    "body": [
+      "INTERNAL_PORT_DECODING_2_NR_84",
+      ""
+    ],
+    "description": "INTERNAL_PORT_DECODING_2_NR_84      equ $84"
+  },
+  "INTERNAL_PORT_DECODING_3_NR_85": {
+    "prefix": "INTERNAL_PORT_DECODING_3_NR_85",
+    "body": [
+      "INTERNAL_PORT_DECODING_3_NR_85",
+      ""
+    ],
+    "description": "INTERNAL_PORT_DECODING_3_NR_85      equ $85"
+  },
+  "InitLayer2(SCREENMODE)": {
+    "prefix": "InitLayer2",
+    "body": [
+      "InitLayer2(MODE${1|256X192,320X256,640X256|})",
+      ""
+    ],
+    "description": "Sets the Layer2 screen mode - see [InitLayer2](initlayer2.md)"
+  },
+  "InitMusic(playerbank,musicbank,address offset in bank)": {
+    "prefix": "InitMusic",
+    "body": [
+      "InitMusic(${1:player},${2:music},${3:offset})",
+      ""
+    ],
+    "description": "Initialise the VortexTracker2 routine in playerbank, with a pt3 file in musicbank with optional offset"
+  },
+  "InitPalette(pallete_sel[, bank, start index, number of colours, offset in bank])": {
+    "prefix": "InitPalette",
+    "body": [
+      "InitPalette(${1|ULA_PALETTE_P1,ULA_PALETTE_P2,L2_PALETTE_P1,L2_PALETTE_P2,SPR_PALETTE_P1,SPR_PALETTE_P2,TILE_PALETTE_P1,TILE_PALETTE_P2|},${2:0},${3:0},${4:0},${5:0})",
+      ""
+    ],
+    "description": "Uploads a palette to the selected palette system see [InitPalette](initpalette.md). You can this command with only the first parameter set, the rest will be set to 0 (default)."
+  },
+  "InitSFX(bank)": {
+    "prefix": "InitSFX",
+    "body": [
+      "InitSFX(${1:bank})",
+      ""
+    ],
+    "description": "Initialise AYFX afb data in bank"
+  },
+  "InitSprites2(nr of sprites,address,sprite bank)": {
+    "prefix": "InitSprites2",
+    "body": [
+      "InitSprites2(${1:nr},${2:address},${3:bank})",
+      ""
+    ],
+    "description": "Upload nr sprites from address, 8 or 4 bit supported from a specified bank"
+  },
+  "InitSprites(nr of sprites,address)": {
+    "prefix": "InitSprites",
+    "body": [
+      "InitSprites(${1:nr},${2:address})",
+      ""
+    ],
+    "description": "Upload nr sprites from address, 8 or 4 bit supported"
+  },
+  "KEMPSTON_JOY1_P_1F": {
+    "prefix": "KEMPSTON_JOY1_P_1F",
+    "body": [
+      "KEMPSTON_JOY1_P_1F",
+      ""
+    ],
+    "description": "KEMPSTON_JOY1_P_1F      equ $1F"
+  },
+  "KEMPSTON_JOY2_P_37": {
+    "prefix": "KEMPSTON_JOY2_P_37",
+    "body": [
+      "KEMPSTON_JOY2_P_37",
+      ""
+    ],
+    "description": "KEMPSTON_JOY2_P_37      equ $37"
+  },
+  "KEMPSTON_MOUSE_B_P_FADF": {
+    "prefix": "KEMPSTON_MOUSE_B_P_FADF",
+    "body": [
+      "KEMPSTON_MOUSE_B_P_FADF",
+      ""
+    ],
+    "description": "KEMPSTON_MOUSE_B_P_FADF      equ $FADF"
+  },
+  "KEMPSTON_MOUSE_X_P_FBDF": {
+    "prefix": "KEMPSTON_MOUSE_X_P_FBDF",
+    "body": [
+      "KEMPSTON_MOUSE_X_P_FBDF",
+      ""
+    ],
+    "description": "KEMPSTON_MOUSE_X_P_FBDF      equ $FBDF"
+  },
+  "KEMPSTON_MOUSE_Y_P_FFDF": {
+    "prefix": "KEMPSTON_MOUSE_Y_P_FFDF",
+    "body": [
+      "KEMPSTON_MOUSE_Y_P_FFDF",
+      ""
+    ],
+    "description": "KEMPSTON_MOUSE_Y_P_FFDF      equ $FFDF"
+  },
+  "KEY": {
+    "prefix": "KEY",
+    "body": [
+      "KEY${1|A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,SYMBOL,SPACE,ENTER,CAPS|}",
+      ""
+    ],
+    "description": "For use with GetKeyScanCode()=KEYx or MultiKey(KEYx), requires keys.bas include"
+  },
+  "L2Text(X,Y,String$,Bank)": {
+    "prefix": "L2Text",
+    "body": [
+      "L2Text(${1:x},${2:y},${3:string},${4:bank},${5:mask})",
+      ""
+    ],
+    "description": "Draw string on Layer2 256x192 using 8x8 font from specified bank. Use the mask to specify a colour to mask out."
+  },
+  "LAYER2_ACCESS_BANK_OFFSET": {
+    "prefix": "LAYER2_ACCESS_BANK_OFFSET",
+    "body": [
+      "LAYER2_ACCESS_BANK_OFFSET",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_BANK_OFFSET      equ $10"
+  },
+  "LAYER2_ACCESS_L2_ENABLED": {
+    "prefix": "LAYER2_ACCESS_L2_ENABLED",
+    "body": [
+      "LAYER2_ACCESS_L2_ENABLED",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_L2_ENABLED      equ $02"
+  },
+  "LAYER2_ACCESS_OVER_ROM_48K": {
+    "prefix": "LAYER2_ACCESS_OVER_ROM_48K",
+    "body": [
+      "LAYER2_ACCESS_OVER_ROM_48K",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_OVER_ROM_48K      equ $C0"
+  },
+  "LAYER2_ACCESS_OVER_ROM_BANK_0": {
+    "prefix": "LAYER2_ACCESS_OVER_ROM_BANK_0",
+    "body": [
+      "LAYER2_ACCESS_OVER_ROM_BANK_0",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_OVER_ROM_BANK_0      equ $00"
+  },
+  "LAYER2_ACCESS_OVER_ROM_BANK_1": {
+    "prefix": "LAYER2_ACCESS_OVER_ROM_BANK_1",
+    "body": [
+      "LAYER2_ACCESS_OVER_ROM_BANK_1",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_OVER_ROM_BANK_1      equ $40"
+  },
+  "LAYER2_ACCESS_OVER_ROM_BANK_2": {
+    "prefix": "LAYER2_ACCESS_OVER_ROM_BANK_2",
+    "body": [
+      "LAYER2_ACCESS_OVER_ROM_BANK_2",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_OVER_ROM_BANK_2      equ $80"
+  },
+  "LAYER2_ACCESS_OVER_ROM_BANK_M": {
+    "prefix": "LAYER2_ACCESS_OVER_ROM_BANK_M",
+    "body": [
+      "LAYER2_ACCESS_OVER_ROM_BANK_M",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_OVER_ROM_BANK_M      equ $C0"
+  },
+  "LAYER2_ACCESS_P_123B": {
+    "prefix": "LAYER2_ACCESS_P_123B",
+    "body": [
+      "LAYER2_ACCESS_P_123B",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_P_123B      equ $123B"
+  },
+  "LAYER2_ACCESS_READ_OVER_ROM": {
+    "prefix": "LAYER2_ACCESS_READ_OVER_ROM",
+    "body": [
+      "LAYER2_ACCESS_READ_OVER_ROM",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_READ_OVER_ROM      equ $04"
+  },
+  "LAYER2_ACCESS_SHADOW_OVER_ROM": {
+    "prefix": "LAYER2_ACCESS_SHADOW_OVER_ROM",
+    "body": [
+      "LAYER2_ACCESS_SHADOW_OVER_ROM",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_SHADOW_OVER_ROM      equ $08"
+  },
+  "LAYER2_ACCESS_WRITE_OVER_ROM": {
+    "prefix": "LAYER2_ACCESS_WRITE_OVER_ROM",
+    "body": [
+      "LAYER2_ACCESS_WRITE_OVER_ROM",
+      ""
+    ],
+    "description": "LAYER2_ACCESS_WRITE_OVER_ROM      equ $01"
+  },
+  "LAYER2_CONTROL_NR_70": {
+    "prefix": "LAYER2_CONTROL_NR_70",
+    "body": [
+      "LAYER2_CONTROL_NR_70",
+      ""
+    ],
+    "description": "LAYER2_CONTROL_NR_70      equ $70"
+  },
+  "LAYER2_RAM_BANK_NR_12": {
+    "prefix": "LAYER2_RAM_BANK_NR_12",
+    "body": [
+      "LAYER2_RAM_BANK_NR_12",
+      ""
+    ],
+    "description": "LAYER2_RAM_BANK_NR_12      equ $12"
+  },
+  "LAYER2_RAM_SHADOW_BANK_NR_13": {
+    "prefix": "LAYER2_RAM_SHADOW_BANK_NR_13",
+    "body": [
+      "LAYER2_RAM_SHADOW_BANK_NR_13",
+      ""
+    ],
+    "description": "LAYER2_RAM_SHADOW_BANK_NR_13      equ $13"
+  },
+  "LAYER2_XOFFSET_MSB_NR_71": {
+    "prefix": "LAYER2_XOFFSET_MSB_NR_71",
+    "body": [
+      "LAYER2_XOFFSET_MSB_NR_71",
+      ""
+    ],
+    "description": "LAYER2_XOFFSET_MSB_NR_71      equ $71"
+  },
+  "LAYER2_XOFFSET_NR_16": {
+    "prefix": "LAYER2_XOFFSET_NR_16",
+    "body": [
+      "LAYER2_XOFFSET_NR_16",
+      ""
+    ],
+    "description": "LAYER2_XOFFSET_NR_16      equ $16"
+  },
+  "LAYER2_YOFFSET_NR_17": {
+    "prefix": "LAYER2_YOFFSET_NR_17",
+    "body": [
+      "LAYER2_YOFFSET_NR_17",
+      ""
+    ],
+    "description": "LAYER2_YOFFSET_NR_17      equ $17"
+  },
+  "LORES_CONTROL_NR_6A": {
+    "prefix": "LORES_CONTROL_NR_6A",
+    "body": [
+      "LORES_CONTROL_NR_6A",
+      ""
+    ],
+    "description": "LORES_CONTROL_NR_6A      equ $6A"
+  },
+  "LORES_XOFFSET_NR_32": {
+    "prefix": "LORES_XOFFSET_NR_32",
+    "body": [
+      "LORES_XOFFSET_NR_32",
+      ""
+    ],
+    "description": "LORES_XOFFSET_NR_32      equ $32"
+  },
+  "LORES_YOFFSET_NR_33": {
+    "prefix": "LORES_YOFFSET_NR_33",
+    "body": [
+      "LORES_YOFFSET_NR_33",
+      ""
+    ],
+    "description": "LORES_YOFFSET_NR_33      equ $33"
+  },
+  "LOW_ADDRESS_KEYMAP_NR_29": {
+    "prefix": "LOW_ADDRESS_KEYMAP_NR_29",
+    "body": [
+      "LOW_ADDRESS_KEYMAP_NR_29",
+      ""
+    ],
+    "description": "LOW_ADDRESS_KEYMAP_NR_29      equ $29"
+  },
+  "LOW_DATA_TO_KEYMAP_NR_2B": {
+    "prefix": "LOW_DATA_TO_KEYMAP_NR_2B",
+    "body": [
+      "LOW_DATA_TO_KEYMAP_NR_2B",
+      ""
+    ],
+    "description": "LOW_DATA_TO_KEYMAP_NR_2B      equ $2B"
+  },
+  "LoadBMP(filename)": {
+    "prefix": "LoadBMP",
+    "body": [
+      "LoadBMP(\"${1:filename}\")",
+      ""
+    ],
+    "description": "Loads a BMP to L2 256x192"
+  },
+  "LoadSDBank(...)": {
+    "prefix": "LoadSDBank",
+    "body": [
+      "LoadSDBank(\"${1:Filename}\",${2:Address},${3:Length},${4:Offset},${5:Start bank})",
+      "$0",
+      ""
+    ],
+    "description": "Loads a file into specified memory banks. Disable this when you create your final NEX by putting #Define NEX before the nextlib"
+  },
+  "LoadSD(filename,address,length,offset)": {
+    "prefix": "LoadSD",
+    "body": [
+      "LoadSD(\"${1:Filename}\",${2:Address},${3:Length},${4:Offset})",
+      "$0",
+      ""
+    ],
+    "description": "Loads a file from SD to memory, length needs to be provided"
+  },
+  "Loading Bitmap": {
+    "prefix": "!bmp",
+    "body": [
+      "'!bmp=image.bmp",
+      ""
+    ],
+    "description": "Use image.bmp as a loading file for the"
+  },
+  "MACHINE_ID_NR_00": {
+    "prefix": "MACHINE_ID_NR_00",
+    "body": [
+      "MACHINE_ID_NR_00",
+      ""
+    ],
+    "description": "MACHINE_ID_NR_00      equ $00"
+  },
+  "MACHINE_TYPE_NR_03": {
+    "prefix": "MACHINE_TYPE_NR_03",
+    "body": [
+      "MACHINE_TYPE_NR_03",
+      ""
+    ],
+    "description": "MACHINE_TYPE_NR_03      equ $03"
+  },
+  "MEM_LORES0_4000": {
+    "prefix": "MEM_LORES0_4000",
+    "body": [
+      "MEM_LORES0_4000",
+      ""
+    ],
+    "description": "MEM_LORES0_4000      equ $4000"
+  },
+  "MEM_LORES1_6000": {
+    "prefix": "MEM_LORES1_6000",
+    "body": [
+      "MEM_LORES1_6000",
+      ""
+    ],
+    "description": "MEM_LORES1_6000      equ $6000"
+  },
+  "MEM_ROM_CHARS_3C00": {
+    "prefix": "MEM_ROM_CHARS_3C00",
+    "body": [
+      "MEM_ROM_CHARS_3C00",
+      ""
+    ],
+    "description": "MEM_ROM_CHARS_3C00      equ $3C00"
+  },
+  "MEM_TIMEX_SCR0_4000": {
+    "prefix": "MEM_TIMEX_SCR0_4000",
+    "body": [
+      "MEM_TIMEX_SCR0_4000",
+      ""
+    ],
+    "description": "MEM_TIMEX_SCR0_4000      equ $4000"
+  },
+  "MEM_TIMEX_SCR1_6000": {
+    "prefix": "MEM_TIMEX_SCR1_6000",
+    "body": [
+      "MEM_TIMEX_SCR1_6000",
+      ""
+    ],
+    "description": "MEM_TIMEX_SCR1_6000      equ $6000"
+  },
+  "MEM_ZX_ATTRIB_5800": {
+    "prefix": "MEM_ZX_ATTRIB_5800",
+    "body": [
+      "MEM_ZX_ATTRIB_5800",
+      ""
+    ],
+    "description": "MEM_ZX_ATTRIB_5800      equ $5800"
+  },
+  "MEM_ZX_SCREEN_4000": {
+    "prefix": "MEM_ZX_SCREEN_4000",
+    "body": [
+      "MEM_ZX_SCREEN_4000",
+      ""
+    ],
+    "description": "MEM_ZX_SCREEN_4000      equ $4000"
+  },
+  "MMU0_0000_NR_50": {
+    "prefix": "MMU0_0000_NR_50",
+    "body": [
+      "MMU0_0000_NR_50",
+      ""
+    ],
+    "description": "MMU0_0000_NR_50      equ $50"
+  },
+  "MMU1_2000_NR_51": {
+    "prefix": "MMU1_2000_NR_51",
+    "body": [
+      "MMU1_2000_NR_51",
+      ""
+    ],
+    "description": "MMU1_2000_NR_51      equ $51"
+  },
+  "MMU2_4000_NR_52": {
+    "prefix": "MMU2_4000_NR_52",
+    "body": [
+      "MMU2_4000_NR_52",
+      ""
+    ],
+    "description": "MMU2_4000_NR_52      equ $52"
+  },
+  "MMU3_6000_NR_53": {
+    "prefix": "MMU3_6000_NR_53",
+    "body": [
+      "MMU3_6000_NR_53",
+      ""
+    ],
+    "description": "MMU3_6000_NR_53      equ $53"
+  },
+  "MMU4_8000_NR_54": {
+    "prefix": "MMU4_8000_NR_54",
+    "body": [
+      "MMU4_8000_NR_54",
+      ""
+    ],
+    "description": "MMU4_8000_NR_54      equ $54"
+  },
+  "MMU5_A000_NR_55": {
+    "prefix": "MMU5_A000_NR_55",
+    "body": [
+      "MMU5_A000_NR_55",
+      ""
+    ],
+    "description": "MMU5_A000_NR_55      equ $55"
+  },
+  "MMU6_C000_NR_56": {
+    "prefix": "MMU6_C000_NR_56",
+    "body": [
+      "MMU6_C000_NR_56",
+      ""
+    ],
+    "description": "MMU6_C000_NR_56      equ $56"
+  },
+  "MMU7_E000_NR_57": {
+    "prefix": "MMU7_E000_NR_57",
+    "body": [
+      "MMU7_E000_NR_57",
+      ""
+    ],
+    "description": "MMU7_E000_NR_57      equ $57"
+  },
+  "Module": {
+    "prefix": "!module",
+    "body": [
+      "'!module",
+      ""
+    ],
+    "description": "Tells the precompile this is a module of a master NEX"
+  },
+  "MultiKey(ScanCode)=": {
+    "prefix": "MultiKeys",
+    "body": [
+      "MultiKeys(KEY${1|A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,SYMBOL,SPACE,ENTER,CAPS|})",
+      ""
+    ],
+    "description": "Can be used to detect multiple key presses as once. You will need keys.bas include"
+  },
+  "NEXT_RESET_NR_02": {
+    "prefix": "NEXT_RESET_NR_02",
+    "body": [
+      "NEXT_RESET_NR_02",
+      ""
+    ],
+    "description": "NEXT_RESET_NR_02      equ $02"
+  },
+  "NEXT_VERSION_MINOR_NR_0E": {
+    "prefix": "NEXT_VERSION_MINOR_NR_0E",
+    "body": [
+      "NEXT_VERSION_MINOR_NR_0E",
+      ""
+    ],
+    "description": "NEXT_VERSION_MINOR_NR_0E      equ $0E"
+  },
+  "NEXT_VERSION_NR_01": {
+    "prefix": "NEXT_VERSION_NR_01",
+    "body": [
+      "NEXT_VERSION_NR_01",
+      ""
+    ],
+    "description": "NEXT_VERSION_NR_01      equ $01"
+  },
+  "NextRegA(reg,value as var)": {
+    "prefix": "NextRegA",
+    "body": [
+      "NextRegA(${1:0},${2:0}",
+      ""
+    ],
+    "description": "Sets Nextreg reg with variable"
+  },
+  "NextReg(reg,value as const)": {
+    "prefix": "NextReg",
+    "body": [
+      "NextReg(${1:0},${2:0})",
+      ""
+    ],
+    "description": "Sets Nextreg reg with constant value (ie, a direct number). If you want to use a variable for the value use NextRegA(reg,var)"
+  },
+  "No Emulator": {
+    "prefix": "!noemu",
+    "body": [
+      "'!noemu",
+      ""
+    ],
+    "description": "Supress launching CSpect after compilation"
+  },
+  "No Header": {
+    "prefix": "!headerless",
+    "body": [
+      "'!headerless",
+      ""
+    ],
+    "description": "Create a compilation with to ZXBC pre-amble startup code"
+  },
+  "No NEX file": {
+    "prefix": "!nonex",
+    "body": [
+      "'!nonex",
+      ""
+    ],
+    "description": "Do not create a NEX file"
+  },
+  "No Stack": {
+    "prefix": "!nosp",
+    "body": [
+      "'!nosp",
+      ""
+    ],
+    "description": "Do not set the stack to within the NEX address range, leave floating"
+  },
+  "No SysVars": {
+    "prefix": "!nosys",
+    "body": [
+      "'!nosys",
+      ""
+    ],
+    "description": "Do not include the System Varibles in the final output"
+  },
+  "Optimisation": {
+    "prefix": "!opt",
+    "body": [
+      "'!opt=2",
+      ""
+    ],
+    "description": "Default = 4, options between 2-4, with 4 taking the longest to compile"
+  },
+  "Origin address": {
+    "prefix": "!org",
+    "body": [
+      "'!org=24576",
+      ""
+    ],
+    "description": "Start address of code in decimal"
+  },
+  "PALETTE_CONTROL_NR_43": {
+    "prefix": "PALETTE_CONTROL_NR_43",
+    "body": [
+      "PALETTE_CONTROL_NR_43",
+      ""
+    ],
+    "description": "PALETTE_CONTROL_NR_43      equ $43"
+  },
+  "PALETTE_FORMAT_NR_42": {
+    "prefix": "PALETTE_FORMAT_NR_42",
+    "body": [
+      "PALETTE_FORMAT_NR_42",
+      ""
+    ],
+    "description": "PALETTE_FORMAT_NR_42      equ $42"
+  },
+  "PALETTE_INDEX_NR_40": {
+    "prefix": "PALETTE_INDEX_NR_40",
+    "body": [
+      "PALETTE_INDEX_NR_40",
+      ""
+    ],
+    "description": "PALETTE_INDEX_NR_40      equ $40"
+  },
+  "PALETTE_VALUE_9BIT_NR_44": {
+    "prefix": "PALETTE_VALUE_9BIT_NR_44",
+    "body": [
+      "PALETTE_VALUE_9BIT_NR_44",
+      ""
+    ],
+    "description": "PALETTE_VALUE_9BIT_NR_44      equ $44"
+  },
+  "PALETTE_VALUE_NR_41": {
+    "prefix": "PALETTE_VALUE_NR_41",
+    "body": [
+      "PALETTE_VALUE_NR_41",
+      ""
+    ],
+    "description": "PALETTE_VALUE_NR_41      equ $41"
+  },
+  "PERIPHERAL_1_NR_05": {
+    "prefix": "PERIPHERAL_1_NR_05",
+    "body": [
+      "PERIPHERAL_1_NR_05",
+      ""
+    ],
+    "description": "PERIPHERAL_1_NR_05      equ $05"
+  },
+  "PERIPHERAL_2_NR_06": {
+    "prefix": "PERIPHERAL_2_NR_06",
+    "body": [
+      "PERIPHERAL_2_NR_06",
+      ""
+    ],
+    "description": "PERIPHERAL_2_NR_06      equ $06"
+  },
+  "PERIPHERAL_3_NR_08": {
+    "prefix": "PERIPHERAL_3_NR_08",
+    "body": [
+      "PERIPHERAL_3_NR_08",
+      ""
+    ],
+    "description": "PERIPHERAL_3_NR_08      equ $08"
+  },
+  "PERIPHERAL_4_NR_09": {
+    "prefix": "PERIPHERAL_4_NR_09",
+    "body": [
+      "PERIPHERAL_4_NR_09",
+      ""
+    ],
+    "description": "PERIPHERAL_4_NR_09      equ $09"
+  },
+  "PERIPHERAL_5_NR_0A": {
+    "prefix": "PERIPHERAL_5_NR_0A",
+    "body": [
+      "PERIPHERAL_5_NR_0A",
+      ""
+    ],
+    "description": "PERIPHERAL_5_NR_0A      equ $0A"
+  },
+  "PI_GPIO_0_NR_98": {
+    "prefix": "PI_GPIO_0_NR_98",
+    "body": [
+      "PI_GPIO_0_NR_98",
+      ""
+    ],
+    "description": "PI_GPIO_0_NR_98      equ $98"
+  },
+  "PI_GPIO_1_NR_99": {
+    "prefix": "PI_GPIO_1_NR_99",
+    "body": [
+      "PI_GPIO_1_NR_99",
+      ""
+    ],
+    "description": "PI_GPIO_1_NR_99      equ $99"
+  },
+  "PI_GPIO_2_NR_9A": {
+    "prefix": "PI_GPIO_2_NR_9A",
+    "body": [
+      "PI_GPIO_2_NR_9A",
+      ""
+    ],
+    "description": "PI_GPIO_2_NR_9A      equ $9A"
+  },
+  "PI_GPIO_3_NR_9B": {
+    "prefix": "PI_GPIO_3_NR_9B",
+    "body": [
+      "PI_GPIO_3_NR_9B",
+      ""
+    ],
+    "description": "PI_GPIO_3_NR_9B      equ $9B"
+  },
+  "PI_GPIO_OUT_ENABLE_0_NR_90": {
+    "prefix": "PI_GPIO_OUT_ENABLE_0_NR_90",
+    "body": [
+      "PI_GPIO_OUT_ENABLE_0_NR_90",
+      ""
+    ],
+    "description": "PI_GPIO_OUT_ENABLE_0_NR_90      equ $90"
+  },
+  "PI_GPIO_OUT_ENABLE_1_NR_91": {
+    "prefix": "PI_GPIO_OUT_ENABLE_1_NR_91",
+    "body": [
+      "PI_GPIO_OUT_ENABLE_1_NR_91",
+      ""
+    ],
+    "description": "PI_GPIO_OUT_ENABLE_1_NR_91      equ $91"
+  },
+  "PI_GPIO_OUT_ENABLE_2_NR_92": {
+    "prefix": "PI_GPIO_OUT_ENABLE_2_NR_92",
+    "body": [
+      "PI_GPIO_OUT_ENABLE_2_NR_92",
+      ""
+    ],
+    "description": "PI_GPIO_OUT_ENABLE_2_NR_92      equ $92"
+  },
+  "PI_GPIO_OUT_ENABLE_3_NR_93": {
+    "prefix": "PI_GPIO_OUT_ENABLE_3_NR_93",
+    "body": [
+      "PI_GPIO_OUT_ENABLE_3_NR_93",
+      ""
+    ],
+    "description": "PI_GPIO_OUT_ENABLE_3_NR_93      equ $93"
+  },
+  "PI_I2S_AUDIO_CONTROL_NR_A2": {
+    "prefix": "PI_I2S_AUDIO_CONTROL_NR_A2",
+    "body": [
+      "PI_I2S_AUDIO_CONTROL_NR_A2",
+      ""
+    ],
+    "description": "PI_I2S_AUDIO_CONTROL_NR_A2      equ $A2"
+  },
+  "PI_PERIPHERALS_ENABLE_NR_A0": {
+    "prefix": "PI_PERIPHERALS_ENABLE_NR_A0",
+    "body": [
+      "PI_PERIPHERALS_ENABLE_NR_A0",
+      ""
+    ],
+    "description": "PI_PERIPHERALS_ENABLE_NR_A0      equ $A0"
+  },
+  "PalUpload(address as uinteger, colours as ubyte, offset as ubyte, bank as ubyte=0)": {
+    "prefix": "PalUpload",
+    "body": [
+      "PalUpload(${1:nr},${2:address},${3:offset},${4:bank})",
+      ""
+    ],
+    "description": "Upload a palette from address, number of colours, offset and optional bank"
+  },
+  "PlotL2(x,y,colour)": {
+    "prefix": "Plot",
+    "body": [
+      "PlotL2(${1:x},${2:y},${3:colour})",
+      ""
+    ],
+    "description": "Plot a pixel on Layer2 256x192 with colour"
+  },
+  "Poke Uinteger address,value": {
+    "prefix": "Poke",
+    "body": [
+      "poke Uinteger ${1:0},${2:0}",
+      ""
+    ],
+    "description": "POKE UINT to address"
+  },
+  "Poke address,value": {
+    "prefix": "Poke",
+    "body": [
+      "Poke ${1:0},${2:0}",
+      ""
+    ],
+    "description": "POKE byte to address"
+  },
+  "Print AT Y,X": {
+    "prefix": "print",
+    "body": [
+      "print",
+      ""
+    ],
+    "description": "\n\tPRINT str$\n\nPrint at y,x;"
+  },
+  "ROM_MAPPING_NR_04": {
+    "prefix": "ROM_MAPPING_NR_04",
+    "body": [
+      "ROM_MAPPING_NR_04",
+      ""
+    ],
+    "description": "ROM_MAPPING_NR_04      equ $04"
+  },
+  "Rem comment": {
+    "prefix": "Rem",
+    "body": [
+      "rem ${1:comment}",
+      ""
+    ],
+    "description": "Adds a remark line"
+  },
+  "RemoveSprite(sprite id,visibility)": {
+    "prefix": "RemoveSprite",
+    "body": [
+      "RemoveSprite(${1:id},${2|0,1|})",
+      ""
+    ],
+    "description": "Remove sprite with id, 0 = off, 1 = on"
+  },
+  "ReserveBank()": {
+    "prefix": "ReserveBank",
+    "body": [
+      "ReserveBank()",
+      ""
+    ],
+    "description": "byte = ReserveBank(), returns free bank from NextZXOS"
+  },
+  "SOUNDDRIVE_DF_MIRROR_NR_2D": {
+    "prefix": "SOUNDDRIVE_DF_MIRROR_NR_2D",
+    "body": [
+      "SOUNDDRIVE_DF_MIRROR_NR_2D",
+      ""
+    ],
+    "description": "SOUNDDRIVE_DF_MIRROR_NR_2D      equ $2D"
+  },
+  "SPI_CS_P_E7": {
+    "prefix": "SPI_CS_P_E7",
+    "body": [
+      "SPI_CS_P_E7",
+      ""
+    ],
+    "description": "SPI_CS_P_E7      equ $E7"
+  },
+  "SPI_DATA_P_EB": {
+    "prefix": "SPI_DATA_P_EB",
+    "body": [
+      "SPI_DATA_P_EB",
+      ""
+    ],
+    "description": "SPI_DATA_P_EB      equ $EB"
+  },
+  "SPRITE_ATTR0_INC_NR_75": {
+    "prefix": "SPRITE_ATTR0_INC_NR_75",
+    "body": [
+      "SPRITE_ATTR0_INC_NR_75",
+      ""
+    ],
+    "description": "SPRITE_ATTR0_INC_NR_75      equ $75"
+  },
+  "SPRITE_ATTR0_NR_35": {
+    "prefix": "SPRITE_ATTR0_NR_35",
+    "body": [
+      "SPRITE_ATTR0_NR_35",
+      ""
+    ],
+    "description": "SPRITE_ATTR0_NR_35      equ $35"
+  },
+  "SPRITE_ATTR1_INC_NR_76": {
+    "prefix": "SPRITE_ATTR1_INC_NR_76",
+    "body": [
+      "SPRITE_ATTR1_INC_NR_76",
+      ""
+    ],
+    "description": "SPRITE_ATTR1_INC_NR_76      equ $76"
+  },
+  "SPRITE_ATTR1_NR_36": {
+    "prefix": "SPRITE_ATTR1_NR_36",
+    "body": [
+      "SPRITE_ATTR1_NR_36",
+      ""
+    ],
+    "description": "SPRITE_ATTR1_NR_36      equ $36"
+  },
+  "SPRITE_ATTR2_INC_NR_77": {
+    "prefix": "SPRITE_ATTR2_INC_NR_77",
+    "body": [
+      "SPRITE_ATTR2_INC_NR_77",
+      ""
+    ],
+    "description": "SPRITE_ATTR2_INC_NR_77      equ $77"
+  },
+  "SPRITE_ATTR2_NR_37": {
+    "prefix": "SPRITE_ATTR2_NR_37",
+    "body": [
+      "SPRITE_ATTR2_NR_37",
+      ""
+    ],
+    "description": "SPRITE_ATTR2_NR_37      equ $37"
+  },
+  "SPRITE_ATTR3_INC_NR_78": {
+    "prefix": "SPRITE_ATTR3_INC_NR_78",
+    "body": [
+      "SPRITE_ATTR3_INC_NR_78",
+      ""
+    ],
+    "description": "SPRITE_ATTR3_INC_NR_78      equ $78"
+  },
+  "SPRITE_ATTR3_NR_38": {
+    "prefix": "SPRITE_ATTR3_NR_38",
+    "body": [
+      "SPRITE_ATTR3_NR_38",
+      ""
+    ],
+    "description": "SPRITE_ATTR3_NR_38      equ $38"
+  },
+  "SPRITE_ATTR4_INC_NR_79": {
+    "prefix": "SPRITE_ATTR4_INC_NR_79",
+    "body": [
+      "SPRITE_ATTR4_INC_NR_79",
+      ""
+    ],
+    "description": "SPRITE_ATTR4_INC_NR_79      equ $79"
+  },
+  "SPRITE_ATTR4_NR_39": {
+    "prefix": "SPRITE_ATTR4_NR_39",
+    "body": [
+      "SPRITE_ATTR4_NR_39",
+      ""
+    ],
+    "description": "SPRITE_ATTR4_NR_39      equ $39"
+  },
+  "SPRITE_ATTRIBUTE_P_57": {
+    "prefix": "SPRITE_ATTRIBUTE_P_57",
+    "body": [
+      "SPRITE_ATTRIBUTE_P_57",
+      ""
+    ],
+    "description": "SPRITE_ATTRIBUTE_P_57      equ $57"
+  },
+  "SPRITE_ATTR_SLOT_SEL_NR_34": {
+    "prefix": "SPRITE_ATTR_SLOT_SEL_NR_34",
+    "body": [
+      "SPRITE_ATTR_SLOT_SEL_NR_34",
+      ""
+    ],
+    "description": "SPRITE_ATTR_SLOT_SEL_NR_34      equ $34"
+  },
+  "SPRITE_CONTROL_NR_15": {
+    "prefix": "SPRITE_CONTROL_NR_15",
+    "body": [
+      "SPRITE_CONTROL_NR_15",
+      ""
+    ],
+    "description": "SPRITE_CONTROL_NR_15      equ $15"
+  },
+  "SPRITE_PATTERN_P_5B": {
+    "prefix": "SPRITE_PATTERN_P_5B",
+    "body": [
+      "SPRITE_PATTERN_P_5B",
+      ""
+    ],
+    "description": "SPRITE_PATTERN_P_5B      equ $5B"
+  },
+  "SPRITE_SLOT_SELECT_PATTERN_HALF": {
+    "prefix": "SPRITE_SLOT_SELECT_PATTERN_HALF",
+    "body": [
+      "SPRITE_SLOT_SELECT_PATTERN_HALF",
+      ""
+    ],
+    "description": "SPRITE_SLOT_SELECT_PATTERN_HALF      equ 128"
+  },
+  "SPRITE_STATUS_COLLISION": {
+    "prefix": "SPRITE_STATUS_COLLISION",
+    "body": [
+      "SPRITE_STATUS_COLLISION",
+      ""
+    ],
+    "description": "SPRITE_STATUS_COLLISION      equ $01"
+  },
+  "SPRITE_STATUS_MAXIMUM_SPRITES": {
+    "prefix": "SPRITE_STATUS_MAXIMUM_SPRITES",
+    "body": [
+      "SPRITE_STATUS_MAXIMUM_SPRITES",
+      ""
+    ],
+    "description": "SPRITE_STATUS_MAXIMUM_SPRITES      equ $02"
+  },
+  "SPRITE_STATUS_SLOT_SELECT_P_303B": {
+    "prefix": "SPRITE_STATUS_SLOT_SELECT_P_303B",
+    "body": [
+      "SPRITE_STATUS_SLOT_SELECT_P_303B",
+      ""
+    ],
+    "description": "SPRITE_STATUS_SLOT_SELECT_P_303B      equ $303B"
+  },
+  "SPRITE_TRANSPARENCY_I_NR_4B": {
+    "prefix": "SPRITE_TRANSPARENCY_I_NR_4B",
+    "body": [
+      "SPRITE_TRANSPARENCY_I_NR_4B",
+      ""
+    ],
+    "description": "SPRITE_TRANSPARENCY_I_NR_4B      equ $4B"
+  },
+  "SUB Procedure": {
+    "prefix": "sub",
+    "body": [
+      "SUB ${1:procedureName}(${2:parameters})",
+      "\t${3:REM code here}",
+      "END SUB",
+      ""
+    ],
+    "description": "SUB...END SUB procedure block"
+  },
+  "SaveSD(filename,address,length)": {
+    "prefix": "SaveSD",
+    "body": [
+      "SaveSD(\"${1:Filename}\",${2:Address},${3:Length})",
+      "$0",
+      ""
+    ],
+    "description": "Save a file from memory to SD, length needs to be provided"
+  },
+  "ScrollLayer2(x,y)": {
+    "prefix": "Scroll",
+    "body": [
+      "ScrollLayer2(${1:x},${2:y})",
+      ""
+    ],
+    "description": "ScrollLayer2 by x,y pixels"
+  },
+  "SetUpIM()": {
+    "prefix": "SetUpIM",
+    "body": [
+      "SetUpIM()",
+      ""
+    ],
+    "description": "Initialise and start dynamic Interrupt routine for use with InitSFX(), InitMusic(), PlaySFX(). Make sure you #DEFINE IM2 before you include the nextlib"
+  },
+  "Set HEAP": {
+    "prefix": "!heap",
+    "body": [
+      "'!heap=$2048",
+      ""
+    ],
+    "description": "Sets the amount of RAM used for the HEAP"
+  },
+  "Setup Sprite Templates From File": {
+    "prefix": "Template",
+    "body": [
+      "",
+      "' -- Load block ",
+      "LoadSDBank(\"${1:fname}\",0,0,0,${2:bank})",
+      "InitSprites2(63,\\$0000,${2:bank})       ' 63 nr of sprites to upload from bank ",
+      "' -- ",
+      ""
+    ],
+    "description": "This code loads a sprite file, pages in relevant banks and then uploads ending with putting back the default banks. This is intended ot be run in the load block of code."
+  },
+  "ShowLayer2(n)": {
+    "prefix": "ShowLayer2",
+    "body": [
+      "ShowLayer2(${1|0,1|})",
+      ""
+    ],
+    "description": "0 disable Layer 2, 1 enable"
+  },
+  "Simple timer snippet": {
+    "prefix": "Template",
+    "body": [
+      "if  ${1:timername} =  ${2:0}",
+      "    ' timer triggered ",
+      "     ${1:timername} = 0",
+      "else ",
+      "     ${1:timername} =  ${1:timername} - 1 ",
+      "endif ",
+      ""
+    ],
+    "description": "This code creates a simple timer that triggers on a set value"
+  },
+  "Specify Origin": {
+    "prefix": "!origin",
+    "body": [
+      "'!origin=source.bas",
+      ""
+    ],
+    "description": "Tells the precompile to compile the origin bas file"
+  },
+  "Sub subname(...": {
+    "prefix": "sub",
+    "body": [
+      "sub ${1:subname}(${2})",
+      "\t$0",
+      "end sub",
+      ""
+    ],
+    "description": "Create a sub"
+  },
+  "TBBLUE_REGISTER_ACCESS_P_253B": {
+    "prefix": "TBBLUE_REGISTER_ACCESS_P_253B",
+    "body": [
+      "TBBLUE_REGISTER_ACCESS_P_253B",
+      ""
+    ],
+    "description": "TBBLUE_REGISTER_ACCESS_P_253B      equ $253B"
+  },
+  "TBBLUE_REGISTER_SELECT_P_243B": {
+    "prefix": "TBBLUE_REGISTER_SELECT_P_243B",
+    "body": [
+      "TBBLUE_REGISTER_SELECT_P_243B",
+      ""
+    ],
+    "description": "TBBLUE_REGISTER_SELECT_P_243B      equ $243B"
+  },
+  "TILEMAP_BASE_ADR_NR_6E": {
+    "prefix": "TILEMAP_BASE_ADR_NR_6E",
+    "body": [
+      "TILEMAP_BASE_ADR_NR_6E",
+      ""
+    ],
+    "description": "TILEMAP_BASE_ADR_NR_6E      equ $6E"
+  },
+  "TILEMAP_CONTROL_NR_6B": {
+    "prefix": "TILEMAP_CONTROL_NR_6B",
+    "body": [
+      "TILEMAP_CONTROL_NR_6B",
+      ""
+    ],
+    "description": "TILEMAP_CONTROL_NR_6B      equ $6B"
+  },
+  "TILEMAP_DEFAULT_ATTR_NR_6C": {
+    "prefix": "TILEMAP_DEFAULT_ATTR_NR_6C",
+    "body": [
+      "TILEMAP_DEFAULT_ATTR_NR_6C",
+      ""
+    ],
+    "description": "TILEMAP_DEFAULT_ATTR_NR_6C      equ $6C"
+  },
+  "TILEMAP_GFX_ADR_NR_6F": {
+    "prefix": "TILEMAP_GFX_ADR_NR_6F",
+    "body": [
+      "TILEMAP_GFX_ADR_NR_6F",
+      ""
+    ],
+    "description": "TILEMAP_GFX_ADR_NR_6F      equ $6F"
+  },
+  "TILEMAP_TRANSPARENCY_I_NR_4C": {
+    "prefix": "TILEMAP_TRANSPARENCY_I_NR_4C",
+    "body": [
+      "TILEMAP_TRANSPARENCY_I_NR_4C",
+      ""
+    ],
+    "description": "TILEMAP_TRANSPARENCY_I_NR_4C      equ $4C"
+  },
+  "TILEMAP_XOFFSET_LSB_NR_30": {
+    "prefix": "TILEMAP_XOFFSET_LSB_NR_30",
+    "body": [
+      "TILEMAP_XOFFSET_LSB_NR_30",
+      ""
+    ],
+    "description": "TILEMAP_XOFFSET_LSB_NR_30      equ $30"
+  },
+  "TILEMAP_XOFFSET_MSB_NR_2F": {
+    "prefix": "TILEMAP_XOFFSET_MSB_NR_2F",
+    "body": [
+      "TILEMAP_XOFFSET_MSB_NR_2F",
+      ""
+    ],
+    "description": "TILEMAP_XOFFSET_MSB_NR_2F      equ $2F"
+  },
+  "TILEMAP_YOFFSET_NR_31": {
+    "prefix": "TILEMAP_YOFFSET_NR_31",
+    "body": [
+      "TILEMAP_YOFFSET_NR_31",
+      ""
+    ],
+    "description": "TILEMAP_YOFFSET_NR_31      equ $31"
+  },
+  "TIMEX_P_FF": {
+    "prefix": "TIMEX_P_FF",
+    "body": [
+      "TIMEX_P_FF",
+      ""
+    ],
+    "description": "TIMEX_P_FF      equ $FF"
+  },
+  "TRANSPARENCY_FALLBACK_COL_NR_4A": {
+    "prefix": "TRANSPARENCY_FALLBACK_COL_NR_4A",
+    "body": [
+      "TRANSPARENCY_FALLBACK_COL_NR_4A",
+      ""
+    ],
+    "description": "TRANSPARENCY_FALLBACK_COL_NR_4A      equ $4A"
+  },
+  "TURBO_CONTROL_NR_07": {
+    "prefix": "TURBO_CONTROL_NR_07",
+    "body": [
+      "TURBO_CONTROL_NR_07",
+      ""
+    ],
+    "description": "TURBO_CONTROL_NR_07      equ $07"
+  },
+  "TURBO_SOUND_CONTROL_P_FFFD": {
+    "prefix": "TURBO_SOUND_CONTROL_P_FFFD",
+    "body": [
+      "TURBO_SOUND_CONTROL_P_FFFD",
+      ""
+    ],
+    "description": "TURBO_SOUND_CONTROL_P_FFFD      equ $FFFD"
+  },
+  "Template For 256x192L2": {
+    "prefix": "Template",
+    "body": [
+      "'!org=24576",
+      "' NextBuild Layer2 Template ",
+      "",
+      "#define NEX ",
+      "#define IM2 ",
+      "",
+      "#include <nextlib.bas>",
+      "",
+      "asm ",
+      "    ; setting registers in an asm block means you can use the global equs for register names ",
+      "    ; 28mhz, black transparency,sprites on over border,256x192/320x256",
+      "    nextreg TURBO_CONTROL_NR_07,%11         ; 28 mhz ",
+      "    nextreg GLOBAL_TRANSPARENCY_NR_14,\\$0    ; black ",
+      "    nextreg SPRITE_CONTROL_NR_15,%00000011  ; %000    S L U, %11 sprites on over border",
+      "    nextreg LAYER2_CONTROL_NR_70,%00000000  ; 5-4 %00 = 256x192x8bpp, 5-4 %01 320x256x8bpp",
+      "end asm ",
+      ""
+    ],
+    "description": "This template sets registers and include nextlib for 320x256x8bpp"
+  },
+  "TileMap(address,offset,nrtiles,x,y,width,worldwidth)": {
+    "prefix": "TileMap",
+    "body": [
+      "TileMap(${1:address},${2:0},${3:nrtiles},${4:x},${5:y},${6:width},${6:worldwidth})",
+      ""
+    ],
+    "description": "Does a software L2 256x192 tilemap. address = mapdata, offset = block to start counting from, nrtiles = how many tiles to draw, x/y = x/y position to top left corner of tilemap, width = width of tilemap on scree, worldwidth = nr of tiles x in world"
+  },
+  "UART_CTRL_P_153B": {
+    "prefix": "UART_CTRL_P_153B",
+    "body": [
+      "UART_CTRL_P_153B",
+      ""
+    ],
+    "description": "UART_CTRL_P_153B      equ $153B"
+  },
+  "UART_RX_P_143B": {
+    "prefix": "UART_RX_P_143B",
+    "body": [
+      "UART_RX_P_143B",
+      ""
+    ],
+    "description": "UART_RX_P_143B      equ $143B"
+  },
+  "UART_TX_P_133B": {
+    "prefix": "UART_TX_P_133B",
+    "body": [
+      "UART_TX_P_133B",
+      ""
+    ],
+    "description": "UART_TX_P_133B      equ $133B"
+  },
+  "UBYTE": {
+    "prefix": "BYTE",
+    "body": [
+      "UBYTE",
+      ""
+    ],
+    "description": "UBYTE is signed -127 - +127, 1bytes"
+  },
+  "UINTEGER": {
+    "prefix": "UINTEGER",
+    "body": [
+      "UINTEGER",
+      ""
+    ],
+    "description": "UINTEGER is unsigned 0 - 65535, 2bytes"
+  },
+  "ULA_CONTROL_NR_68": {
+    "prefix": "ULA_CONTROL_NR_68",
+    "body": [
+      "ULA_CONTROL_NR_68",
+      ""
+    ],
+    "description": "ULA_CONTROL_NR_68      equ $68"
+  },
+  "ULA_P_FE": {
+    "prefix": "ULA_P_FE",
+    "body": [
+      "ULA_P_FE",
+      ""
+    ],
+    "description": "ULA_P_FE      equ $FE"
+  },
+  "ULA_XOFFSET_NR_26": {
+    "prefix": "ULA_XOFFSET_NR_26",
+    "body": [
+      "ULA_XOFFSET_NR_26",
+      ""
+    ],
+    "description": "ULA_XOFFSET_NR_26      equ $26"
+  },
+  "ULA_YOFFSET_NR_27": {
+    "prefix": "ULA_YOFFSET_NR_27",
+    "body": [
+      "ULA_YOFFSET_NR_27",
+      ""
+    ],
+    "description": "ULA_YOFFSET_NR_27      equ $27"
+  },
+  "USER_STORAGE_0_NR_7F": {
+    "prefix": "USER_STORAGE_0_NR_7F",
+    "body": [
+      "USER_STORAGE_0_NR_7F",
+      ""
+    ],
+    "description": "USER_STORAGE_0_NR_7F      equ $7F"
+  },
+  "UpdateSprite(uint x,y,id,image,attr3,attr4)": {
+    "prefix": "UpdateSprite",
+    "body": [
+      "UpdateSprite(${1:x},${2:y},${3:id},${4:image},${5:attr3},${6:attr4})",
+      ""
+    ],
+    "description": "Updates the sprite with id set. Sprite attribute 3 and 4 are supported (flip, scale, rotate, anchor etc)"
+  },
+  "VAL string$": {
+    "prefix": "VAL",
+    "body": [
+      "VAL ${1:str$}",
+      ""
+    ],
+    "description": "Turns string into a numerical value eg : a = VAL \"5\""
+  },
+  "VIDEO_INTERUPT_CONTROL_NR_22": {
+    "prefix": "VIDEO_INTERUPT_CONTROL_NR_22",
+    "body": [
+      "VIDEO_INTERUPT_CONTROL_NR_22",
+      ""
+    ],
+    "description": "VIDEO_INTERUPT_CONTROL_NR_22      equ $22"
+  },
+  "VIDEO_INTERUPT_VALUE_NR_23": {
+    "prefix": "VIDEO_INTERUPT_VALUE_NR_23",
+    "body": [
+      "VIDEO_INTERUPT_VALUE_NR_23",
+      ""
+    ],
+    "description": "VIDEO_INTERUPT_VALUE_NR_23      equ $23"
+  },
+  "VIDEO_LINE_LSB_NR_1F": {
+    "prefix": "VIDEO_LINE_LSB_NR_1F",
+    "body": [
+      "VIDEO_LINE_LSB_NR_1F",
+      ""
+    ],
+    "description": "VIDEO_LINE_LSB_NR_1F      equ $1F"
+  },
+  "VIDEO_LINE_MSB_NR_1E": {
+    "prefix": "VIDEO_LINE_MSB_NR_1E",
+    "body": [
+      "VIDEO_LINE_MSB_NR_1E",
+      ""
+    ],
+    "description": "VIDEO_LINE_MSB_NR_1E      equ $1E"
+  },
+  "VIDEO_LINE_OFFSET_NR_64": {
+    "prefix": "VIDEO_LINE_OFFSET_NR_64",
+    "body": [
+      "VIDEO_LINE_OFFSET_NR_64",
+      ""
+    ],
+    "description": "VIDEO_LINE_OFFSET_NR_64      equ $64"
+  },
+  "VIDEO_TIMING_NR_11": {
+    "prefix": "VIDEO_TIMING_NR_11",
+    "body": [
+      "VIDEO_TIMING_NR_11",
+      ""
+    ],
+    "description": "VIDEO_TIMING_NR_11      equ $11"
+  },
+  "WaitKey()": {
+    "prefix": "WaitKey",
+    "body": [
+      "WaitKey()",
+      ""
+    ],
+    "description": "Waits for keyboard or kempston 1 to be pressed"
+  },
+  "WaitRaster(nn)": {
+    "prefix": "WaitRaster",
+    "body": [
+      "WaitRaster(${1|192,242|})             ",
+      ""
+    ],
+    "description": "Wait until the raster line is nn"
+  },
+  "WaitRetrace(nn)": {
+    "prefix": "WaitRetrace",
+    "body": [
+      "WaitRetrace(${1:frames})",
+      ""
+    ],
+    "description": "Wait number of frames "
+  },
+  "Z80_DMA_PORT_DATAGEAR": {
+    "prefix": "Z80_DMA_PORT_DATAGEAR",
+    "body": [
+      "Z80_DMA_PORT_DATAGEAR",
+      ""
+    ],
+    "description": "Z80_DMA_PORT_DATAGEAR      equ $6B"
+  },
+  "Z80_DMA_PORT_MB02": {
+    "prefix": "Z80_DMA_PORT_MB02",
+    "body": [
+      "Z80_DMA_PORT_MB02",
+      ""
+    ],
+    "description": "Z80_DMA_PORT_MB02      equ $0B"
+  },
+  "ZILOG_DMA_P_0B": {
+    "prefix": "ZILOG_DMA_P_0B",
+    "body": [
+      "ZILOG_DMA_P_0B",
+      ""
+    ],
+    "description": "ZILOG_DMA_P_0B      equ $0B"
+  },
+  "ZX128P3_MEMORY_P_1FFD": {
+    "prefix": "ZX128P3_MEMORY_P_1FFD",
+    "body": [
+      "ZX128P3_MEMORY_P_1FFD",
+      ""
+    ],
+    "description": "ZX128P3_MEMORY_P_1FFD      equ $1FFD"
+  },
+  "ZX128_MEMORY_P_7FFD": {
+    "prefix": "ZX128_MEMORY_P_7FFD",
+    "body": [
+      "ZX128_MEMORY_P_7FFD",
+      ""
+    ],
+    "description": "ZX128_MEMORY_P_7FFD      equ $7FFD"
+  },
+  "ZX128_MEMORY_P_DFFD": {
+    "prefix": "ZX128_MEMORY_P_DFFD",
+    "body": [
+      "ZX128_MEMORY_P_DFFD",
+      ""
+    ],
+    "description": "ZX128_MEMORY_P_DFFD      equ $DFFD"
+  },
+  "ZXN_DMA_P_6B": {
+    "prefix": "ZXN_DMA_P_6B",
+    "body": [
+      "ZXN_DMA_P_6B",
+      ""
+    ],
+    "description": "ZXN_DMA_P_6B      equ $6B"
+  },
+  "ZX_MEM_MAPPING_NR_8E": {
+    "prefix": "ZX_MEM_MAPPING_NR_8E",
+    "body": [
+      "ZX_MEM_MAPPING_NR_8E",
+      ""
+    ],
+    "description": "ZX_MEM_MAPPING_NR_8E      equ $8E"
+  },
+  "'!asm": {
+    "prefix": "'!",
+    "body": [
+      "'!asm",
+      ""
+    ],
+    "description": "Compile and output to asm, no NEX is created. No emulator is launched."
+  },
+  "'!bmp=file.bmp": {
+    "prefix": "'!",
+    "body": [
+      "'!bmp=${1:dest}",
+      ""
+    ],
+    "description": "BMP to be used as a loading screen when creating a NEX"
+  },
+  "'!copy=drive:\\file.ext": {
+    "prefix": "'!",
+    "body": [
+      "'!copy=${1:dest}",
+      ""
+    ],
+    "description": "Copies the NEX output to a specified location"
+  },
+  "'!heap=size": {
+    "prefix": "'!",
+    "body": [
+      "'!heap=${1:size}",
+      ""
+    ],
+    "description": "Size in bytes of heap, default is 2048"
+  },
+  "'!noemu": {
+    "prefix": "'!",
+    "body": [
+      "'!noemu",
+      ""
+    ],
+    "description": "Do not launch emulator after compilation"
+  },
+  "'!opt=optimisation value": {
+    "prefix": "'!",
+    "body": [
+      "'!opt=${1|0|1|2|3|4|}",
+      ""
+    ],
+    "description": "Optimisation value for the compiler 0 - 4"
+  },
+  "'!org=address": {
+    "prefix": "'!",
+    "body": [
+      "'!org=${1:address}",
+      ""
+    ],
+    "description": "Start address of your program, default is 32768"
+  },
+  "#define DEBUG": {
+    "prefix": "#define",
+    "body": [
+      "#define DEBUG",
+      ""
+    ],
+    "description": "Halt on loading errors"
+  },
+  "#define IM2": {
+    "prefix": "#define",
+    "body": [
+      "#define IM2",
+      "$0",
+      ""
+    ],
+    "description": "Required for SetUpIM2() and related music + ayfx routines"
+  },
+  "#define NEX": {
+    "prefix": "#define",
+    "body": [
+      "#define NEX",
+      ""
+    ],
+    "description": "Required for finalising your NEX to disable LoadSDBank code"
+  },
+  "#include <nextlib.bas>": {
+    "prefix": "#include",
+    "body": [
+      "#include ${1|<nextlib.bas>,<keys.bas>,<memcopy.bas>,<string.bas>,<print42.bas>,<print64.bas>,<printfzx.bas>,<megalz.bas>|}",
+      "$0",
+      ""
+    ],
+    "description": "Include the nextlib or other zxb lib, make sure this is after any #DEFINEs for NEX, DEBUG, IM2"
+  },
+  "border n": {
+    "prefix": "border",
+    "body": [
+      "border ${1:n}",
+      ""
+    ],
+    "description": "Set BORDER n"
+  },
+  "cast(ubyte,value)": {
+    "prefix": "cast",
+    "body": [
+      "cast(ubyte,${1:0})",
+      ""
+    ],
+    "description": "Cast value as ubyte"
+  },
+  "cast(uinteger,value)": {
+    "prefix": "cast",
+    "body": [
+      "cast(uinteger,${1:0})",
+      ""
+    ],
+    "description": "Cast value as uinteger"
+  },
+  "do : loop until n=n": {
+    "prefix": "do",
+    "body": [
+      "do",
+      "\t$0",
+      "loop ${1|until, |}",
+      ""
+    ],
+    "description": "Create a DO : LOOP"
+  },
+  "exb": {
+    "prefix": "exb",
+    "body": [
+      "%00000000",
+      ""
+    ],
+    "description": "Snippet for 1 byte in binary"
+  },
+  "for n=n to n": {
+    "prefix": "for",
+    "body": [
+      "for ${1:0}=${2:0} to ${3:0}",
+      "\t$0",
+      "next $1",
+      ""
+    ],
+    "description": "Create FOR NEXT"
+  },
+  "if n : endif": {
+    "prefix": "if",
+    "body": [
+      "if ${1:0}",
+      "\t$0",
+      "endif",
+      ""
+    ],
+    "description": "if : endif"
+  },
+  "ink n": {
+    "prefix": "ink",
+    "body": [
+      "ink ${1:n}",
+      ""
+    ],
+    "description": "Set INK n"
+  },
+  "inkey": {
+    "prefix": "inkey",
+    "body": [
+      "inkey",
+      ""
+    ],
+    "description": "Returns keycode, use GetKeyScanCode() from keys.bas"
+  },
+  "nextreg reg,a or value": {
+    "prefix": "nextreg",
+    "body": [
+      "nextreg ${1:0},${2:0}",
+      ""
+    ],
+    "description": "This needs to be in an asm block as direct inline asm. Can take either value or a"
+  },
+  "paper n": {
+    "prefix": "paper",
+    "body": [
+      "paper ${1:n}",
+      ""
+    ],
+    "description": "Set PAPER n"
+  },
+  "pause nframes": {
+    "prefix": "pause",
+    "body": [
+      "pause ${1:0}",
+      ""
+    ],
+    "description": "Pause n frames, please use WaitRaster(n) instead"
+  },
+  "peek(address)": {
+    "prefix": "peek",
+    "body": [
+      "peek(${1:0})",
+      ""
+    ],
+    "description": "Peek byte from address"
+  },
+  "peek(uinteger,address)": {
+    "prefix": "peek",
+    "body": [
+      "peek(uinteger,${1:0})",
+      ""
+    ],
+    "description": "Peek uinteger from address"
+  },
+  "read var/string...": {
+    "prefix": "read",
+    "body": [
+      "READ ${1:var}",
+      ""
+    ],
+    "description": "READ var or string, use with RESTORE and DATA"
+  },
+  "restore label": {
+    "prefix": "restore",
+    "body": [
+      "RESTORE ${1:label}",
+      ""
+    ],
+    "description": "RESTORE label containing DATA for use with READ"
+  },
+  "while n=n : wend": {
+    "prefix": "while",
+    "body": [
+      "while ${1:0} ",
+      "\t$0",
+      "wend",
+      ""
+    ],
+    "description": "Create a WHILE : WEND eg:\nWhile a < b\n  Let a = a + 1\n Poke a, 0\nEnd While"
+  }
+}
