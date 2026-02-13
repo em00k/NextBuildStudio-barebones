@@ -1,0 +1,79 @@
+{ 
+ "actionButtons": {
+
+                "commands": [
+
+            {
+                "name": "$(book) Help",
+                "color": "#ffeeaa",
+                "useVsCodeApi": true,
+                "command": "nextbuild-viewers.showKeywordHelp",
+                "args": ["Index"]
+             } ,
+             {
+                "name": "$(gear) New Project",
+                "color": "#e7e7e7",
+                "useVsCodeApi": true,
+                "command": "nextbuild-viewers.createNewProject"
+             },
+             {
+            "name": "$(play) Compile & Run",
+            "color": "#39ff14",
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask",
+            "args": ["Build Source & Run CSpect"]
+        },
+        {
+            "name": "$(rocket) Run Emulator", 
+            "color": "#00eaff",
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask",
+            "args": ["Start CSpect"]
+        },
+        {
+            "name": "$(chrome-restore) Build Modules",
+            "color": "#ff6b35", 
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask",
+		            "args": ["MODULE : Build all modules & run"]
+        },
+        {
+            "name": "$(package) Single Module",
+            "color": "#8e44ad",
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask", 
+            "args": ["MODULE : Build single module & run"]
+        },
+        {
+            "name": "$(cloud-upload) HDF Sync",
+            "color": "#3498db",
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask",
+            "args": ["Sync Files to HDF"]
+        },
+        {
+            "name": "$(clone) Start NextZXOS",
+            "color": "#e74c3c",
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask",
+            "args": ["Start NextZXOS"]
+        },
+        {
+           "name": "$(folder-opened) Explorer",
+           "color": "#f39c12",
+           "useVsCodeApi": true,
+           "command": "workbench.action.files.revealActiveFileInWindows"
+        },
+        {
+            "name": "$(gear) Settings",
+            "color": "#95a5a6",
+            "useVsCodeApi": true,
+            "command": "workbench.action.tasks.runTask",
+            "args": ["Edit Config"]
+        }
+        ],
+        "defaultColor": "white",
+        "reloadButton": "↻",
+        "loadNpmCommands": false
+    }
+}
