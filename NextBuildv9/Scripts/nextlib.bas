@@ -1,6 +1,6 @@
 ' vim:ts=4:et:
 ' ---------------------------------------------------------
-' NextLib v9 - David Saphier / em00k 2025
+' NextLib v9.2 - David Saphier / em00k 2022
 ' Help and thanks Boriel, Flash, Baggers, Britlion, Shiru, Mike Daily 
 ' ---------------------------------------------------------
 
@@ -16,339 +16,8 @@
 
 ' the following consts are courtesy of ped7g  https://github.com/ped7g/SpecBong/blob/master/constants.i.asm
 asm 
-BIT_UP          equ 4   ; 16
-BIT_DOWN        equ 5   ; 32
-BIT_LEFT        equ 6   ; 64
-BIT_RIGHT       equ 7   ; 128
 
-DIR_NONE        equ %00000000
-DIR_UP          equ %00010000
-DIR_DOWN        equ %00100000
-DIR_LEFT        equ %01000000
-DIR_RIGHT       equ %10000000
-
-DIR_UP_I        equ %11101111
-DIR_DOWN_I      equ %11011111
-DIR_LEFT_I      equ %10111111
-DIR_RIGHT_I     equ %01111111
-
-;-----------------------------------------------------------------------------
-;-- I/O ports - ZX Spectrum classic (48, 128, Timex, Pentagon, ...) ports
-
-ULA_P_FE                        equ $FE     ; BORDER + MIC + BEEP + read Keyboard
-TIMEX_P_FF                      equ $FF     ; Timex video control port
-
-ZX128_MEMORY_P_7FFD             equ $7FFD   ; ZX Spectrum 128 ports
-ZX128_MEMORY_P_DFFD             equ $DFFD
-ZX128P3_MEMORY_P_1FFD           equ $1FFD
-
-AY_REG_P_FFFD                   equ $FFFD
-AY_DATA_P_BFFD                  equ $BFFD
-
-Z80_DMA_PORT_DATAGEAR           equ $6B     ; on ZXN the zxnDMA handles this in zxnDMA mode
-Z80_DMA_PORT_MB02               equ $0B     ; on ZXN the zxnDMA handles this in Zilog mode
-
-DIVMMC_CONTROL_P_E3             equ $E3
-SPI_CS_P_E7                     equ $E7
-SPI_DATA_P_EB                   equ $EB
-
-KEMPSTON_MOUSE_X_P_FBDF         equ $FBDF
-KEMPSTON_MOUSE_Y_P_FFDF         equ $FFDF
-KEMPSTON_MOUSE_B_P_FADF         equ $FADF   ; kempston mouse wheel+buttons
-
-KEMPSTON_JOY1_P_1F              equ $1F
-KEMPSTON_JOY2_P_37              equ $37
-
-;-----------------------------------------------------------------------------
-;-- I/O ports - ZX Spectrum NEXT specific ports
-
-TBBLUE_REGISTER_SELECT_P_243B   equ $243B
-    ; -- port $243B = 9275  Read+Write (detection bitmask: %0010_0100_0011_1011)
-    ;   -- selects NextREG mapped at port TBBLUE_REGISTER_ACCESS_P_253B
-
-TBBLUE_REGISTER_ACCESS_P_253B   equ $253B
-    ; -- port $253B = 9531  Read?+Write? (detection bitmask: %0010_0101_0011_1011)
-    ;   -- data for selected NextREG (read/write depends on the register selected)
-
-; indexes into DAC_CHANNEL_* def-arrays, depending on the type of DAC you want to use
-DAC_GS_COVOX_INDEX              equ     1
-DAC_PENTAGON_ATM_INDEX          equ     2
-DAC_SPECDRUM_INDEX              equ     3
-DAC_SOUNDRIVE1_INDEX            equ     4
-DAC_SOUNDRIVE2_INDEX            equ     5
-DAC_COVOX_INDEX                 equ     6
-DAC_PROFI_COVOX_INDEX           equ     7
-    ; -- enable 8bit DACs with PERIPHERAL_3_NR_08, use DAC_*_INDEX to access particular set of ports
-    ;DEFARRAY    DAC_CHANNEL_A  @@,  @@, $FB, $DF, $1F, $F1,  @@, $3F
-    ;DEFARRAY    DAC_CHANNEL_B  @@, $B3,  @@,  @@, $0F, $F3, $0F,  @@
-    ;DEFARRAY    DAC_CHANNEL_C  @@, $B3,  @@,  @@, $4F, $F9, $4F,  @@
-    ;DEFARRAY    DAC_CHANNEL_D  @@,  @@, $FB, $DF, $5F, $FB,  @@, $5F
-    ; -- like for example: ld bc,DAC_CHANNEL_B[DAC_PROFI_COVOX_INDEX]
-
-I2C_SCL_P_103B                  equ $103B   ; i2c bus port (clock) (write only?)
-I2C_SDA_P_113B                  equ $113B   ; i2c bus port (data) (read+write)
-UART_TX_P_133B                  equ $133B   ; UART tx port (read+write)
-UART_RX_P_143B                  equ $143B   ; UART rx port (read+write)
-UART_CTRL_P_153B                equ $153B   ; UART control port (read+write)
-
-ZILOG_DMA_P_0B                  equ $0B
-ZXN_DMA_P_6B                    equ $6B
-    ; -- port $6B = 107 Read+Write (detection bitmask: %xxxx_xxxx_0110_1011)
-    ;   - The zxnDMA is mostly compatible with Zilog DMA chip (Z8410) (at least
-    ;     as far as old ZX apps are concerned), but has many modifications.
-    ;   - core3.1.1 update - Zilog/zxnDMA mode is now selected by port number, not PERIPHERAL_2_NR_06!
-    ;   - core3.0 update - (REMOVED) specific behaviour details can be selected (PERIPHERAL_2_NR_06)
-
-LAYER2_ACCESS_P_123B            equ $123B
-    ; -- port $123B = 4667 Read+Write (detection bitmask: %0001_0010_0011_1011)
-    ;   - see ports.txt or wiki for details (has become a bit more complex over time)
-
-LAYER2_ACCESS_WRITE_OVER_ROM    equ $01     ; map Layer2 bank into ROM area (0000..3FFF) for WRITE-only (reads as ROM)
-LAYER2_ACCESS_L2_ENABLED        equ $02     ; enable Layer2 (make banks form nextreg $12 visible)
-LAYER2_ACCESS_READ_OVER_ROM     equ $04     ; map Layer2 bank into ROM area (0000..3FFF) for READ-only
-LAYER2_ACCESS_SHADOW_OVER_ROM   equ $08     ; bank selected by bits 6-7 is from "shadow Layer 2" banks range (nextreg $13)
-LAYER2_ACCESS_BANK_OFFSET       equ $10     ; bit 2-0 is bank offset for current active mapping +0..+7 (other bits are reserved, use 0)
-LAYER2_ACCESS_OVER_ROM_BANK_M   equ $C0     ; (mask of) value 0..3 selecting bank mapped for R/W (Nextreg $12 or $13)
-LAYER2_ACCESS_OVER_ROM_BANK_0   equ $00     ; screen lines 0..63    (256x192) or columns 0..63    (320x256) or columns 0..127   (640x256)
-LAYER2_ACCESS_OVER_ROM_BANK_1   equ $40     ; screen lines 64..127  (256x192) or columns 64..127  (320x256) or columns 128..255 (640x256)
-LAYER2_ACCESS_OVER_ROM_BANK_2   equ $80     ; screen lines 128..191 (256x192) or columns 128..191 (320x256) or columns 256..383 (640x256)
-LAYER2_ACCESS_OVER_ROM_48K      equ $C0     ; maps all 0..191 lines into $0000..$BFFF region (256x192) or 2/3 of columns in 320x256/640x256
-
-SPRITE_STATUS_SLOT_SELECT_P_303B    equ $303B
-    ; -- port $303B = 12347  Read+Write (detection bitmask: %0011_0000_0011_1011)
-    ;   -- write:
-    ;     - sets both "sprite slot" (0..63) and "pattern slot" (0..63 +128)
-    ;     - once the sprite/pattern slots are set, they act independently and
-    ;     each port ($xx57 and $xx5B) will auto-increment its own slot index
-    ;     (to resync one can write to this port again).
-    ;     - the +128 flag will make the pattern upload start at byte 128 of pattern
-    ;     slot (second half of slot)
-    ;     - The sprite-slot (sprite-attributes) may be optionally interlinked with
-    ;     NextReg $34 (feature controlled by NextReg $34)
-    ;     - auto-increments of slot position from value 63 are officially
-    ;     "undefined behaviour", wrap to 0 is not guaranteed. (only setting slots
-    ;     explicitly back to valid 0..63 will make your code future-proof)
-    ;   -- read (will also reset both collision and max-sprites flags):
-    ;     - bit 1 = maximum sprites per line hit (set when sprite renderer ran
-    ;               out of time when preparing next scanline)
-    ;     - bit 0 = collision flag (set when any sprites draw non-transparent
-    ;               pixel at the same location)
-    ;     Both flags contain values for current scanline already at the beginning
-    ;     of scanline (sprite engine renders one line ahead into buffer and updates
-    ;     flags progressively as it renders the sprites)
-SPRITE_STATUS_MAXIMUM_SPRITES   equ $02
-SPRITE_STATUS_COLLISION         equ $01
-SPRITE_SLOT_SELECT_PATTERN_HALF equ 128     ; add it to 0..63 index to make pattern upload start at second half of pattern
-
-SPRITE_ATTRIBUTE_P_57           equ $57
-    ; -- port $xx57 = 87 write-only (detection bitmask: %xxxx_xxxx_0101_0111)
-    ;  - writing 4 or 5 bytes long structures to control particular sprite
-    ;  - after 4/5 bytes block the sprite slot index is auto-incremented
-    ;  - for detailed documentation check official docs or wiki (too long)
-
-SPRITE_PATTERN_P_5B             equ $5B
-    ; -- port $xx5B = 91 write-only (detection bitmask: %xxxx_xxxx_0101_1011)
-    ;  - each pattern slot is 256 bytes long = one 16x16 pattern of 8-bit pixels
-    ;    or two 16x16 patterns of 4-bit pixels.
-    ;  - Patterns are uploaded in "English" order (left to right, top to bottom),
-    ;    one byte encodes single pixel in 8 bit mode and two pixels in 4 bit
-    ;    mode (bits 7-4 are "left" pixel, 3-0 are "right" pixel)
-    ;  - pixels are offset (index) into active sprite palette
-
-TURBO_SOUND_CONTROL_P_FFFD      equ $FFFD   ; write with bit 7 = 1 (port shared with AY)
-
-;-----------------------------------------------------------------------------
-;-- NEXT HW Registers (NextReg)
-MACHINE_ID_NR_00                equ $00
-NEXT_VERSION_NR_01              equ $01
-NEXT_RESET_NR_02                equ $02
-MACHINE_TYPE_NR_03              equ $03
-ROM_MAPPING_NR_04               equ $04     ;In config mode, allows RAM to be mapped to ROM area.
-PERIPHERAL_1_NR_05              equ $05     ;Sets joystick mode, video frequency and Scandoubler.
-PERIPHERAL_2_NR_06              equ $06     ;Enables turbo/50Hz/60Hz keys, DivMMC, Multiface and audio (beep/AY)
-TURBO_CONTROL_NR_07             equ $07
-PERIPHERAL_3_NR_08              equ $08     ;ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and [un]lock 128k paging.
-PERIPHERAL_4_NR_09              equ $09     ;Sets scanlines, AY mono output, Sprite-id lockstep, disables Kempston and divMMC ports.
-PERIPHERAL_5_NR_0A              equ $0A     ;Mouse buttons and DPI settings (core 3.1.5)
-NEXT_VERSION_MINOR_NR_0E        equ $0E
-ANTI_BRICK_NR_10                equ $10
-VIDEO_TIMING_NR_11              equ $11
-LAYER2_RAM_BANK_NR_12           equ $12     ;bank number where visible Layer 2 video memory begins.
-LAYER2_RAM_SHADOW_BANK_NR_13    equ $13     ;bank number for "shadow" write-over-rom mapping
-GLOBAL_TRANSPARENCY_NR_14       equ $14     ;Sets the color treated as transparent for ULA/Layer2/LoRes
-SPRITE_CONTROL_NR_15            equ $15     ;LoRes mode, Sprites configuration, layers priority
-    ; bit 7: enable LoRes mode
-    ; bit 6: sprite rendering (1=sprite 0 on top of other, 0=sprite 0 at bottom)
-    ; bit 5: If 1, the clipping works even in "over border" mode
-    ; 4-2: layers priority: 000=SLU, 001=LSU, 010=SUL, 011=LUS, 100=USL, 101=ULS, 110=S,mix(U+L), 111=S,mix(U+L-5)
-    ; bit 1: enable sprites over border, bit 0: show sprites
-LAYER2_XOFFSET_NR_16            equ $16
-LAYER2_YOFFSET_NR_17            equ $17
-CLIP_LAYER2_NR_18               equ $18
-CLIP_SPRITE_NR_19               equ $19
-CLIP_ULA_LORES_NR_1A            equ $1A
-CLIP_TILEMAP_NR_1B              equ $1B
-CLIP_WINDOW_CONTROL_NR_1C       equ $1C     ;set to 15 to reset all clip-window indices to 0
-VIDEO_LINE_MSB_NR_1E            equ $1E
-VIDEO_LINE_LSB_NR_1F            equ $1F
-VIDEO_INTERUPT_CONTROL_NR_22    equ $22     ;Controls the timing of raster interrupts and the ULA frame interrupt.
-VIDEO_INTERUPT_VALUE_NR_23      equ $23
-ULA_XOFFSET_NR_26               equ $26     ;since core 3.0
-ULA_YOFFSET_NR_27               equ $27     ;since core 3.0
-HIGH_ADRESS_KEYMAP_NR_28        equ $28     ;reads first 8b part of value written to $44 (even unfinished 16b write)
-LOW_ADRESS_KEYMAP_NR_29         equ $29
-HIGH_DATA_TO_KEYMAP_NR_2A       equ $2A
-LOW_DATA_TO_KEYMAP_NR_2B        equ $2B
-DAC_B_MIRROR_NR_2C              equ $2C     ;reads as MSB of Pi I2S left side sample, LSB waits at $2D
-DAC_AD_MIRROR_NR_2D             equ $2D     ;another alias for $2D, reads LSB of value initiated by $2C or $2E read
-SOUNDDRIVE_DF_MIRROR_NR_2D      equ $2D     ;Nextreg port-mirror of port 0xDF
-DAC_C_MIRROR_NR_2E              equ $2E     ;reads as MSB of Pi I2S right side sample, LSB waits at $2D
-TILEMAP_XOFFSET_MSB_NR_2F       equ $2F
-TILEMAP_XOFFSET_LSB_NR_30       equ $30
-TILEMAP_YOFFSET_NR_31           equ $31
-LORES_XOFFSET_NR_32             equ $32
-LORES_YOFFSET_NR_33             equ $33
-SPRITE_ATTR_SLOT_SEL_NR_34      equ $34     ;Sprite-attribute slot index for $35-$39/$75-$79 port $57 mirrors
-SPRITE_ATTR0_NR_35              equ $35     ;port $57 mirror in nextreg space (accessible to copper)
-SPRITE_ATTR1_NR_36              equ $36
-SPRITE_ATTR2_NR_37              equ $37
-SPRITE_ATTR3_NR_38              equ $38
-SPRITE_ATTR4_NR_39              equ $39
-PALETTE_INDEX_NR_40             equ $40     ;Chooses a ULANext palette number to configure.
-PALETTE_VALUE_NR_41             equ $41     ;Used to upload 8-bit colors to the ULANext palette.
-PALETTE_FORMAT_NR_42            equ $42     ;ink-mask for ULANext modes
-PALETTE_CONTROL_NR_43           equ $43     ;Enables or disables ULANext interpretation of attribute values and toggles active palette.
-PALETTE_VALUE_9BIT_NR_44        equ $44     ;Holds the additional blue color bit for RGB333 color selection.
-TRANSPARENCY_FALLBACK_COL_NR_4A equ $4A     ;8-bit colour to be drawn when all layers are transparent
-SPRITE_TRANSPARENCY_I_NR_4B     equ $4B     ;index of transparent colour in sprite palette (only bottom 4 bits for 4-bit patterns)
-TILEMAP_TRANSPARENCY_I_NR_4C    equ $4C     ;index of transparent colour in tilemap graphics (only bottom 4 bits)
-MMU0_0000_NR_50                 equ $50     ;Set a Spectrum RAM page at position 0x0000 to 0x1FFF
-MMU1_2000_NR_51                 equ $51     ;Set a Spectrum RAM page at position 0x2000 to 0x3FFF
-MMU2_4000_NR_52                 equ $52     ;Set a Spectrum RAM page at position 0x4000 to 0x5FFF
-MMU3_6000_NR_53                 equ $53     ;Set a Spectrum RAM page at position 0x6000 to 0x7FFF
-MMU4_8000_NR_54                 equ $54     ;Set a Spectrum RAM page at position 0x8000 to 0x9FFF
-MMU5_A000_NR_55                 equ $55     ;Set a Spectrum RAM page at position 0xA000 to 0xBFFF
-MMU6_C000_NR_56                 equ $56     ;Set a Spectrum RAM page at position 0xC000 to 0xDFFF
-MMU7_E000_NR_57                 equ $57     ;Set a Spectrum RAM page at position 0xE000 to 0xFFFF
-COPPER_DATA_NR_60               equ $60
-COPPER_CONTROL_LO_NR_61         equ $61
-COPPER_CONTROL_HI_NR_62         equ $62
-COPPER_DATA_16B_NR_63           equ $63     ; same as $60, but waits for full 16b before write
-VIDEO_LINE_OFFSET_NR_64         equ $64     ; (core 3.1.5)
-ULA_CONTROL_NR_68               equ $68
-DISPLAY_CONTROL_NR_69           equ $69
-LORES_CONTROL_NR_6A             equ $6A
-TILEMAP_CONTROL_NR_6B           equ $6B
-TILEMAP_DEFAULT_ATTR_NR_6C      equ $6C
-TILEMAP_BASE_ADR_NR_6E          equ $6E     ;Tilemap base address of map
-TILEMAP_GFX_ADR_NR_6F           equ $6F     ;Tilemap definitions (graphics of tiles)
-LAYER2_CONTROL_NR_70            equ $70
-LAYER2_XOFFSET_MSB_NR_71        equ $71     ; for 320x256 and 640x256 L2 modes (core 3.0.6+)
-SPRITE_ATTR0_INC_NR_75          equ $75     ;port $57 mirror in nextreg space (accessible to copper) (slot index++)
-SPRITE_ATTR1_INC_NR_76          equ $76
-SPRITE_ATTR2_INC_NR_77          equ $77
-SPRITE_ATTR3_INC_NR_78          equ $78
-SPRITE_ATTR4_INC_NR_79          equ $79
-USER_STORAGE_0_NR_7F            equ $7F
-EXPANSION_BUS_ENABLE_NR_80      equ $80
-EXPANSION_BUS_CONTROL_NR_81     equ $81
-INTERNAL_PORT_DECODING_0_NR_82  equ $82     ;bits 0-7
-INTERNAL_PORT_DECODING_1_NR_83  equ $83     ;bits 8-15
-INTERNAL_PORT_DECODING_2_NR_84  equ $84     ;bits 16-23
-INTERNAL_PORT_DECODING_3_NR_85  equ $85     ;bits 24-31
-EXPANSION_BUS_DECODING_0_NR_86  equ $86     ;bits 0-7 mask
-EXPANSION_BUS_DECODING_1_NR_87  equ $87     ;bits 8-15 mask
-EXPANSION_BUS_DECODING_2_NR_88  equ $88     ;bits 16-23 mask
-EXPANSION_BUS_DECODING_3_NR_89  equ $89     ;bits 24-31 mask
-EXPANSION_BUS_PROPAGATE_NR_8A   equ $8A     ;Monitoring internal I/O or adding external keyboard
-ALTERNATE_ROM_NR_8C             equ $8C     ;Enable alternate ROM or lock 48k ROM
-ZX_MEM_MAPPING_NR_8E            equ $8E     ;shortcut to set classic zx128+3 memory model at one place
-PI_GPIO_OUT_ENABLE_0_NR_90      equ $90     ;pins 0-7
-PI_GPIO_OUT_ENABLE_1_NR_91      equ $91     ;pins 8-15
-PI_GPIO_OUT_ENABLE_2_NR_92      equ $92     ;pins 16-23
-PI_GPIO_OUT_ENABLE_3_NR_93      equ $93     ;pins 24-27
-PI_GPIO_0_NR_98                 equ $98     ;pins 0-7
-PI_GPIO_1_NR_99                 equ $99     ;pins 8-15
-PI_GPIO_2_NR_9A                 equ $9A     ;pins 16-23
-PI_GPIO_3_NR_9B                 equ $9B     ;pins 24-27
-PI_PERIPHERALS_ENABLE_NR_A0     equ $A0
-PI_I2S_AUDIO_CONTROL_NR_A2      equ $A2
-;PI_I2S_CLOCK_DIVIDE_NR_A3       equ $A3    ; REMOVED in core 3.1.5 (no more master-mode)
-ESP_WIFI_GPIO_OUTPUT_NR_A8      equ $A8
-ESP_WIFI_GPIO_NR_A9             equ $A9
-EXTENDED_KEYS_0_NR_B0           equ $B0     ;read Next compound keys as standalone keys (outside of zx48 matrix)
-EXTENDED_KEYS_1_NR_B1           equ $B1     ;read Next compound keys as standalone keys (outside of zx48 matrix)
-;DIVMMC_TRAP_ENABLE_1_NR_B2      equ $B2    ; NOT IMPLEMENTED in core yet (as of 3.1.4), may happen in future
-;DIVMMC_TRAP_ENABLE_2_NR_B4      equ $B4    ; NOT IMPLEMENTED in core yet (as of 3.1.4), may happen in future
-DEBUG_LED_CONTROL_NR_FF         equ $FF     ;Turns debug LEDs on and off on TBBlue implementations that have them.
-
-;-----------------------------------------------------------------------------
-;-- common memory addresses
-MEM_ROM_CHARS_3C00              equ $3C00   ; actual chars start at $3D00 with space
-MEM_ZX_SCREEN_4000              equ $4000
-MEM_ZX_ATTRIB_5800              equ $5800
-MEM_LORES0_4000                 equ $4000
-MEM_LORES1_6000                 equ $6000
-MEM_TIMEX_SCR0_4000             equ $4000
-MEM_TIMEX_SCR1_6000             equ $6000
-
-;-----------------------------------------------------------------------------
-;-- Copper commands
-COPPER_NOOP                     equ %00000000
-COPPER_WAIT_H                   equ %10000000
-COPPER_HALT_B                   equ $FF   ; 2x $FF = wait for (511,63) = infinite wait
-
-;-----------------------------------------------------------------------------
-; DMA (Register 6)
-DMA_RESET                   equ $C3
-DMA_RESET_PORT_A_TIMING     equ $C7
-DMA_RESET_PORT_B_TIMING     equ $CB
-DMA_LOAD                    equ $CF
-DMA_CONTINUE                equ $D3
-DMA_DISABLE_INTERUPTS       equ $AF
-DMA_ENABLE_INTERUPTS        equ $AB
-DMA_RESET_DISABLE_INTERUPTS equ $A3
-DMA_ENABLE_AFTER_RETI       equ $B7
-DMA_READ_STATUS_BYTE        equ $BF
-DMA_REINIT_STATUS_BYTE      equ $8B
-DMA_START_READ_SEQUENCE     equ $A7
-DMA_FORCE_READY             equ $B3
-DMA_DISABLE                 equ $83
-DMA_ENABLE                  equ $87
-DMA_READ_MASK_FOLLOWS       equ $BB
-DMA_WRITE_REGISTER_COMMAND     equ $bb
-DMA_BURST                      equ %11001101
-DMA_CONTINUOUS                 equ %10101101
-
-;-----------------------------------------------------------------------------
-; Palette Mappings 
-
-ULA_PALETTE_P1  equ %000<<4
-ULA_PALETTE_P2  equ %100<<4
-L2_PALETTE_P1   equ %001<<4
-L2_PALETTE_P2   equ %101<<4
-SPR_PALETTE_P1  equ %010<<4
-SPR_PALETTE_P2  equ %110<<4
-TILE_PALETTE_P1 equ %011<<4
-TILE_PALETTE_P2 equ %111<<4
-
-
-; esxdos functions 
-
-M_GETSETDRV         equ $89
-F_OPEN              equ $9a
-F_CLOSE             equ $9b
-F_READ              equ $9d
-F_WRITE             equ $9e
-F_SEEK              equ $9f
-F_STAT              equ $a1 
-F_SIZE              equ $ac
-FA_READ             equ $01
-FA_APPEND           equ $06
-FA_OVERWRITE        equ $0C
-LAYER2_ACCESS_PORT  EQU $123B
-
-
+    #include "nbs_constants.asm"
     di ; absolutely no interrupts 
 
 end asm 
@@ -383,6 +52,12 @@ end asm
         REM     
         
 #endif 
+
+#define QUITEMU \
+    ASM \
+    DB $DD,00 \
+    END ASM 
+    
 #define MUL_DE \
     DB $ED,$30\
 
@@ -549,9 +224,10 @@ function NStr(ins as ubyte) as string
         ld      (hl), d
         dec     hl  
 
-        ld      de, _common                 ; point to string we want to set
+        BREAK 
+        ld      de, _common:                ; point to string we want to set
         ex      de, hl                      ; swap hl & de - hl = string, de = source 
-        call    .core.__STORE_STR           ; do call as we need to return to complete
+        call    .core.__STORE_STR:          ; do call as we need to return to complete
         jp      nst_finished                ; the common$ assignment 
 
     CharToAsc:      
@@ -655,6 +331,190 @@ function FASTCALL BinToString(num as ubyte) as String
     end asm 
 end function
 
+
+sub fastcall BankPoke(bank as ubyte, offset as uinteger, value as ubyte)
+    ' bank poke with wrapping 0000-1fff
+    asm 
+            ex          (sp), hl
+            pop         de 
+            pop         de 
+            nextreg     MMU0_0000_NR_50, a          ; set bank  
+            ld          a, $3f                      ; wrap offset 0000-1fff  
+            and         d 
+            ld          d, a                        ; 
+            pop         af 
+            ld          (de), a                     ; write value 
+            push        hl                          ; ret address 
+            nextreg     MMU0_0000_NR_50, $ff
+    end asm 
+end sub 
+
+
+function fastcall BankPeek(bank as ubyte, offset as uinteger) as ubyte
+    ' bank poke with wrapping 0000-1fff
+    asm 
+            ex          (sp), hl
+            pop         de 
+            pop         de 
+            nextreg     MMU0_0000_NR_50, a          ; set bank  
+            ld          a, $3f                      ; wrap offset 0000-1fff  
+            and         d 
+            ld          d, a                        ; 
+            ld          a, (de)                     ; read value 
+            push        hl                          ; ret address 
+            nextreg     MMU0_0000_NR_50, $ff
+    end asm 
+end function
+
+sub fastcall BankPokeUint(bank as ubyte, offset as uinteger, value as uinteger)
+    ' pokes uinteger to a bank with offset 0000 - 1ffff
+    asm 
+              
+            ex          (sp), hl                    ; swap top of stack (ret) with hl 
+            pop         de                          ; pop off the offset 
+            pop         de                          ; discard 
+            nextreg     MMU0_0000_NR_50, a          ; set bank  
+            ld          a, $3f                      ; wrap offset 0000-1fff  
+            and         d                           
+            ld          d, a
+            pop         bc
+            ex          de,hl
+            ld          (hl), c
+            inc         hl
+            ld          (hl), b
+            push        de 
+            nextreg     MMU0_0000_NR_50, $ff
+    end asm 
+end sub 
+
+
+function fastcall BankPeekUint(bank as ubyte, offset as uinteger) as uinteger
+    ' bank poke with wrapping 0000-1fff
+    asm     
+
+            ex          (sp), hl                    ; ret in hl
+            pop         de                          ; offset 
+            push        hl                          ; ret on stack
+            nextreg     MMU0_0000_NR_50, a          ; set bank  
+            ld          a, $3f                      ; wrap offset 0000-1fff  
+            and         d 
+            ld          d, a                        ; 
+            ld          a, (de)                     ; read value 
+            inc         de
+            ld          l, a 
+            ld          a, (de) 
+            ld          h, a
+
+            nextreg     MMU0_0000_NR_50, $ff
+    end asm 
+end function
+
+sub fastcall RunAT(speed as ubyte)
+    ' sets the CPU Speed 3.5,7,14,28Mhz
+    asm 
+        and     %00000011
+        nextreg TURBO_CONTROL_NR_07,a
+    end asm 
+end sub 
+
+Sub fastcall CopyToBanks(startb as ubyte, destb as ubyte, nrbanks as ubyte, copylen as uinteger=$2000, copystart as uinteger=$0, copydest as uinteger=$2000 )
+ 	asm
+		exx : pop hl : exx 
+		; a = start bank 			
+
+		;call 	_checkints
+		;di 
+		ld 		c,a 					; store start bank in c 
+		pop 	de 						; dest bank in e 
+		ld 		e,c 					; d = source e = dest 
+
+		pop 	af                      ; get nrbanks 
+		ld 		b,a 					; number of loops 
+
+		pop 	hl						; get copy length
+		ld 		(copysize+1),hl 	    ; SMC for LDIR copy length 
+
+        pop     hl                      ; source start 
+        ld      (copy_start_addr+1),hl   ; store for later 
+        
+        pop     hl                      ; source start 
+        ld      (copy_dest_addr+1),hl   ; store for later 
+
+copy_bank_loop:	
+		push 	bc
+		push 	de 
+        
+		ld 		a,e
+		nextreg $50,a
+		ld 		a,d
+		nextreg $51,a 
+
+copy_dest_addr:
+		ld 		de,$2000                ; set with smc from above
+        ld      hl,$2000
+        add     hl, de 
+        ex      de, hl 
+
+copy_start_addr:
+		ld 		hl,$0000            ; address to srart copy from         
+copysize:		
+		ld 		bc,$2000
+		ldir 
+		pop 	de
+		pop	 	bc
+		inc 	d
+		inc 	e
+		djnz 	copy_bank_loop
+		
+		nextreg $50,$ff : nextreg $51,$ff
+		;ReenableInts
+		exx : push hl : exx : ret 
+
+ 	end asm  
+end sub  
+ 
+
+sub fastcall BankToRam(start_bank as ubyte, dest_mem as uinteger, dest_len as uinteger)
+    asm 
+        ; copies up to 16KB from a start bank
+        nextreg MMU0_0000_NR_50, a          ; set bank
+        inc     a 
+        nextreg MMU1_2000_NR_51, a          ; set bank
+        ex      (sp), hl                    ; ret in hl 
+        pop     de 
+        pop     de 
+        pop     bc 
+        push    hl 
+        ld      hl,0
+        ldir    
+        nextreg $50,$ff : nextreg $51,$ff
+
+    end asm 
+end sub 
+
+sub fastcall ClearBanks(startb as ubyte, number_of_banks as ubyte=1)
+    asm 
+        ;BREAK 
+        ; clears 1 or more banks
+        ex      (sp), hl                    ; ret in hl
+        pop     de : pop bc
+        push    hl  
+        nextreg MMU0_0000_NR_50, a          ; set bank
+    clear_bank_loop:
+        push    bc 
+        ld      bc, $1fff
+        ld      hl, 0000
+        ld      de, 0001
+        ld      (hl), l
+        ldir 
+        pop     bc 
+        dec     b 
+        inc     a 
+        nextreg MMU0_0000_NR_50, a          ; next bank
+        djnz    clear_bank_loop
+        nextreg MMU0_0000_NR_50, $ff        ; set bank
+    end asm 
+end sub 
 
 Sub fastcall MMU8new(byval slot as ubyte, byval memorybank as ubyte)
     ' changes 8kb  slots valid slots 0-7 mapped as below 
@@ -856,6 +716,40 @@ LayerShadow:
         ; ei
   END ASM 
 end sub    
+
+declare function PointL2(byVal X as ubyte, byval Y as ubyte) as ubyte
+
+function fastcall PointL2(byVal X as ubyte, byval Y as ubyte) as ubyte
+
+    asm 
+        
+        ; PointL2 (c) 2026 David Saphier / em00k
+        point_l2:
+        ; call  _check_interrupts
+        ; di
+        ; BREAK      
+        pop     hl      ; save return address off stack 
+        ; pop   de 
+        ld      e,a     ; put a into e = x 
+        ld      bc,LAYER2_ACCESS_PORT
+        pop     af      ; pop stack into a = y
+        ld      d,a     ; put into d = y 
+        and     $c0     ; yy00 0000         ; first 48K of layer 2 in the bottom 48K
+        or      %110    ; yy00 0101         ; L2 Visible & Enable Reads
+        out     (c),a   ; select 8k-bank    
+        ld      a,d     ; yyyy yyyy
+        and     63      ; 00yy yyyy         ; wrap 64 lines
+        ld      d,a     ; de now points to correct memory address
+        ld      a,(de)  ; put colour value into a
+        push    af      ; save af
+        ld      a,2     ; 0000 0010
+        out     (c),a   ; Layer2 writes off 
+        pop     af 
+        push    hl      ; restore return address
+        ; ReenableInts
+        ; ei
+  END ASM 
+end function
 
 SUB fastcall PlotL2Shadow(byVal X as ubyte, byval Y as ubyte, byval T as ubyte)
     asm 
@@ -1965,6 +1859,7 @@ Sub SaveSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
         LOCAL error
         LOCAL fileopen
         LOCAL mloop
+
         push ix                     ; both needed for returning nicely 
         push hl
         ld e,(ix+6)                 ; address in to de 
@@ -3284,9 +3179,13 @@ sub DrawImage(xpos as uinteger, ypos as ubyte, img_data as uinteger, frame as ub
     '        dw 00
     '    end asm 
     ' 
-    asm 
 
-        push    namespace   ImagePlot
+    asm 
+    
+    
+        push    namespace   ip
+        ; jp      image_plot_done
+        
         push    ix 
     straight_plot:
         ; typewriter plots large tile
@@ -3301,18 +3200,18 @@ sub DrawImage(xpos as uinteger, ypos as ubyte, img_data as uinteger, frame as ub
 
         ld      a, (ix+11)                              ; get frame
 
-        push    hl 
-        pop     ix 
+        push    hl                                      ; save xy
+        pop     ix                                      ; xy into ix
         ld      l, (ix+3)                               ; source 
         ld      h, (ix+4)
 
         ld      e, (ix+1)                               ; fetch width
         ld      d, (ix+2)                               ; fetch height
-        mul     d, e                                    ; total size 
-        ld      l, a 
+        mul     d, e                                    ; de total size 
+        ld      l, a                                    ; frame 
         ld      h, 0 
         call    .core.__MUL16_FAST                      ; call MUL16 HLxDE=HL now start of data
-
+                                                        ; 
         ld      a, h                                    ; h is MSB of source data
         and     %11100000                               ; AND with $E0
         swapnib                                         ; now A is 0000 1110
@@ -3320,8 +3219,9 @@ sub DrawImage(xpos as uinteger, ypos as ubyte, img_data as uinteger, frame as ub
         ld      e, (ix+0)                               ; get the bank the source date is in from table
         add     a, e                                    ; add the offset
         nextreg $50, a                                  ; set slot 0
-        inc     a                                       ; next bank 
+        inc     a                                       ; next bank
         nextreg $51, a                                  ; set slot 1
+        ld      (__source_bank_save), a                 ; save last bank 
 
         ld      a, h 
         and     $1f                                      ; wrap h around 8kb
@@ -3329,13 +3229,20 @@ sub DrawImage(xpos as uinteger, ypos as ubyte, img_data as uinteger, frame as ub
 
         ld      b, (ix+2)                               ; height
             
-    .add1:
+.add1:
         ld      de, 0000                                ; will hold yx with self mod code
-    .line1:  
-            
-        push    bc                                      ; save bc / height 
+    .line1:
+         
+        ; Check for bottom clipping
+        ld      de, (.add1+1)                           ; get yx
+        ld      a, d                                    ; get y
+        cp      192                                     ; compare with bottom of screen
+        jr      nc, __clip_exit                         ; if y >= 192, exit (clipped)
+
+        push    bc                                      ; save bc / height
+
         call    get_xy_pos_l2                           ; get position and l2 bank in place
-        ld      b, 0                                    ; clear b 
+        ld      b, 0                                    ; clear b
         ld      a,(ix+1)                                ; width
         or      a                                       ; is width full width?
         jr      nz, __was_not_zero                       ; check to see if we have a width of 256
@@ -3343,25 +3250,70 @@ sub DrawImage(xpos as uinteger, ypos as ubyte, img_data as uinteger, frame as ub
 
     __was_not_zero:
         ld      c, a
-        ldir                                            ; copy line 
+        ldir                                            ; copy line
         pop     bc                                      ; get back height
-        ld      de, (.add1+1)                           ; get back yx 
+        ld      de, (.add1+1)                           ; get back yx
         inc     d                                       ; inc y 
-        ld      (.add1+1), de                           ; save yx again
-        dec     b                                       ; decrease height 
-        jr      nz, .line1                              ; was height 0? no then loop to line1
-        ld      bc, .LAYER2_ACCESS_PORT                 ; turn off layer 2 writes
-        ld      a, 2 
-        out     (c), a 
-        pop     ix 
-        jp      image_plot_done
 
+        ld      a, 192                                  ; line 192
+        cp      d 
+
+        jr      z, __fix_banks
+
+        
+
+    __fix_return:
+        ld      (.add1+1), de                           ; save yx again
+        dec     b                                       ; decrease height
+        jr      nz, .line1                              ; was height 0? no then loop to line1
+
+    __clip_exit:
+                                 ; clean up stack (restore bc that was pushed)
+        ld      bc, .LAYER2_ACCESS_PORT                 ; turn off layer 2 writes
+        ld      a, 2
+        out     (c), a
+         
+        jp      image_plot_done
+;    __clip_exit_start:
+;        pop     bc                                      ; pop bc off stack from LDIR
+;        jr      __clip_exit:
+
+    __fix_banks:
+        ; need to check if source HL crossed into next bank
+        ; when HL was incremented by LDIR
+        ld      a, h
+        and     $e0                                      ; check if h crossed into next 8kb
+        jr      z, __no_source_bank_cross                ; if h < $2000, no bank cross
+
+        ; source crossed into next bank, update slots $50 and $51
+        ld      a, (__source_bank_save)                  ; get last bank
+        inc     a                                        ; next bank
+        nextreg $50, a
+        inc     a
+        nextreg $51, a
+        ld      (__source_bank_save), a                  ; save new last bank
+        ld      a, h
+        and     $1f                                      ; wrap h around 8kb
+        ld      h, a
+        jp      __fix_return
+
+    __no_source_bank_cross:
+        ; source didn't cross, just restore the current banks
+        ld      a, (__source_bank_save)                  ; get last bank
+        dec     a                                        ; previous bank (current slot 0)
+        nextreg $50, a
+        inc     a
+        nextreg $51, a
+        jp      __fix_return
+
+    __source_bank_save:
+        db      0                                        ; storage for current source bank
 
     get_xy_pos_l2:
 
         ; input d = y, e = x
         ; uses de a bc 
-        ; push    bc
+        ;push    bc
         ld      bc,.LAYER2_ACCESS_PORT
         ld      a,d                                     ; put y into A 
         and     $c0                                     ; yy00 0000
@@ -3371,12 +3323,14 @@ sub DrawImage(xpos as uinteger, ypos as ubyte, img_data as uinteger, frame as ub
         ld      a,d                                     ; yyyy yyyy
         and     63                                      ; 00yy yyyy 
         ld      d,a
-        ; pop     bc
-        ret
+        ;pop     bc
+        ret        
+
     image_plot_done:
         nextreg $50,$ff
         nextreg $51,$ff
         
+        pop     ix
         pop     namespace
 
     end asm 
@@ -3419,7 +3373,7 @@ sub fastcall InitPalette(pallete_sel as ubyte, bank as ubyte=0, start as uintege
         nextreg     $50, $ff            ; replace slot 0 
     __no_colcount:
         push    ix 
-     
+        
     end asm
 end sub 
 
@@ -3461,6 +3415,9 @@ SUB PalUpload(ByVal address as uinteger, byval colours as ubyte,byval offset as 
         djnz    palloop                     ; repeat for remaining bytes / colours 
 
         nextreg     $50, $ff            ; replace slot 0 
+    
+
+
         ENDP
     end asm         
 end sub 
@@ -3480,6 +3437,42 @@ sub fastcall SelectPalette(p as ubyte)
 		nextreg PALETTE_CONTROL_NR_43, a
 	end asm 
 end sub 
+
+sub fastcall SetPalette(_palette as ubyte,  index as ubyte, value as uinteger)
+    ' sets a palette colour 
+    asm
+        ;BREAK 
+        ex      (sp), hl
+        ; a = palette 
+        nextreg PALETTE_CONTROL_NR_43,a 
+        pop     de
+        pop     af 
+        nextreg PALETTE_INDEX_NR_40,a 
+        ld      a, e 
+        nextreg PALETTE_VALUE_9BIT_NR_41,a
+        ld      a, d 
+        nextreg PALETTE_VALUE_9BIT_NR_44,a
+        pop     de
+        push    hl
+        
+    end asm 
+end sub 
+
+function fastcall GetPalette(_palette as ubyte, index as ubyte) as uinteger
+    ' returns colour as uinteger 
+    asm
+        ex      (sp), hl
+        nextreg PALETTE_CONTROL_NR_43, a
+        pop     af 
+        POP     af
+        nextreg PALETTE_INDEX_NR_40, a 
+        push    hl 
+        getreg(PALETTE_VALUE_NR_41)
+        ld      l, a 
+        getreg(PALETTE_VALUE_9BIT_NR_44)
+        ld      h, a 
+    end asm
+end function
 
 Sub ClipLayer2( byval x1 as ubyte, byval x2 as ubyte, byval y1 as ubyte, byval y2 as ubyte ) 
 
@@ -3780,13 +3773,13 @@ sub fastcall WaitRetrace2(byval repeats as ubyte)
 
 end sub 
 
-sub WaitKey()
+sub fastcall WaitKey()
     asm
     ; waits for any keypress or kemp 1/2 or md pad abc/start
     PROC
         ;   ; break 
     LOCAL WaitAnyKey,.NoKey,.NoKempston,.AnyKeyOrKempston,.check_key
-    LOCAL raster_line_wait, rloop
+    LOCAL raster_line_wait
             ; push  bc
     WaitAnyKey:
         .NoKey:
@@ -3819,20 +3812,42 @@ sub WaitKey()
             jr      exit_wait_key 
 
     raster_line_wait:
-            ld      bc,TBBLUE_REGISTER_SELECT_P_243B
-            ld      a,VIDEO_LINE_LSB_NR_1F
-            out     (c),a                                   ; select NR $1E
-            inc     b
-    rloop:
-            in      a,(c)                                   ; A = raster line MSB
-            ; cp        165
-            xor     e
-            rra
-            jr      nc,rloop                                ; loop until MSB.1 != E.1
-            dec     e                                       ; decrement counter
-            jr      nz,rloop                                ; loop until counter == 0
-            ret             
 
+            ld d,0
+            ;ld e,a 
+    wk_readline:
+			ld bc,$243b
+			ld a,$1e
+			out (c),a
+			inc b
+			in a,(c)
+			ld h,a
+			dec b
+			ld a,$1f
+			out (c),a
+			inc b
+			in a,(c)
+			ld  l,a
+			and a
+			sbc hl,de
+			add hl,de
+			jr nz,wk_readline
+ 
+
+;            ld      bc,TBBLUE_REGISTER_SELECT_P_243B
+;            ld      a,VIDEO_LINE_LSB_NR_1F
+;            out     (c),a                                   ; select NR $1E
+;            inc     b
+;    rloop:
+;            in      a,(c)                                   ; A = raster line MSB
+;            ; cp        165
+;            xor     e
+;            rra
+;            jr      nc,rloop                                ; loop until MSB.1 != E.1
+;            dec     e                                       ; decrement counter
+;            jr      nz,rloop                                ; loop until counter == 0
+;            ret             
+;
     exit_wait_key: 
             ; pop   bc 
             ret     
@@ -3848,6 +3863,10 @@ sub Console(db_string as string)
     db_string=db_string+chr 0 
 
     asm  
+        nextreg MMU0_0000_NR_50,$ff
+        nextreg MMU1_2000_NR_51,$ff
+        nextreg MMU2_4000_NR_52,$0a
+        
         ld      h, (ix+5)
         ld      l, (ix+4)           ; string address into hl 
         add     hl, 2               ; skip over length 
@@ -4065,7 +4084,7 @@ end sub
 filename:
     asm         
     filename:
-        DEFS 320,0
+        DEFS 512,0
     endfilename:    
     end asm 
     ' sets the stack to be within the filename space, hence the NEX
@@ -4093,234 +4112,12 @@ INTERNAL_STACK_TOP:
 
 asm 
 
-#include once <zxnext_utils.asm>
+#include once <zxnext_utils.asm>     
+;#include once <arith/mul16.asm>         
 
 end asm     
 
-const BIT_UP        as ubyte =4
-const BIT_DOWN      as ubyte =5
-const BIT_LEFT      as ubyte =6
-const BIT_RIGHT     as ubyte =7
-const DIR_NONE      as ubyte =%00000000
-const DIR_UP        as ubyte =%00010000
-const DIR_DOWN      as ubyte =%00100000
-const DIR_LEFT      as ubyte =%01000000
-const DIR_RIGHT     as ubyte =%10000000
-const DIR_UP_I      as ubyte =%11101111
-const DIR_DOWN_I    as ubyte =%11011111
-const DIR_LEFT_I    as ubyte =%10111111
-const DIR_RIGHT_I   as ubyte =%01111111
-const ULA_P_FE      as ubyte =$FE
-const TIMEX_P_FF    as ubyte =$FF
-const ZX128_MEMORY_P_7FFD as uinteger =$7FFD
-const ZX128_MEMORY_P_DFFD as uinteger =$DFFD
-const ZX128P3_MEMORY_P_1FFD as uinteger =$1FFD
-const AY_REG_P_FFFD as uinteger =$FFFD
-const AY_DATA_P_BFFD as uinteger =$BFFD
-const Z80_DMA_PORT_DATAGEAR as ubyte =$6B
-const Z80_DMA_PORT_MB02 as ubyte =$0B
-const DIVMMC_CONTROL_P_E3 as ubyte =$E3
-const SPI_CS_P_E7 as ubyte =$E7
-const SPI_DATA_P_EB as ubyte =$EB
-const KEMPSTON_MOUSE_X_P_FBDF as uinteger =$FBDF
-const KEMPSTON_MOUSE_Y_P_FFDF as uinteger =$FFDF
-const KEMPSTON_MOUSE_B_P_FADF as uinteger =$FADF
-const KEMPSTON_JOY1_P_1F as ubyte =$1F
-const KEMPSTON_JOY2_P_37 as ubyte =$37
-const TBBLUE_REGISTER_SELECT_P_243B as uinteger =$243B
-const TBBLUE_REGISTER_ACCESS_P_253B as uinteger =$253B
-const DAC_GS_COVOX_INDEX as ubyte =1
-const DAC_PENTAGON_ATM_INDEX as ubyte =2
-const DAC_SPECDRUM_INDEX as ubyte =3
-const DAC_SOUNDRIVE1_INDEX as ubyte =4
-const DAC_SOUNDRIVE2_INDEX as ubyte =5
-const DAC_COVOX_INDEX as ubyte =6
-const DAC_PROFI_COVOX_INDEX as ubyte =7
-const I2C_SCL_P_103B as uinteger =$103B
-const I2C_SDA_P_113B as uinteger =$113B
-const UART_TX_P_133B as uinteger =$133B
-const UART_RX_P_143B as uinteger =$143B
-const UART_CTRL_P_153B as uinteger =$153B
-const ZILOG_DMA_P_0B as ubyte =$0B
-const ZXN_DMA_P_6B as ubyte =$6B
-const LAYER2_ACCESS_P_123B as uinteger =$123B
-const LAYER2_ACCESS_WRITE_OVER_ROM as ubyte =$01
-const LAYER2_ACCESS_L2_ENABLED as ubyte =$02
-const LAYER2_ACCESS_READ_OVER_ROM as ubyte =$04
-const LAYER2_ACCESS_SHADOW_OVER_ROM as ubyte =$08
-const LAYER2_ACCESS_BANK_OFFSET as ubyte =$10
-const LAYER2_ACCESS_OVER_ROM_BANK_M as ubyte =$C0
-const LAYER2_ACCESS_OVER_ROM_BANK_0 as ubyte =$00
-const LAYER2_ACCESS_OVER_ROM_BANK_1 as ubyte =$40
-const LAYER2_ACCESS_OVER_ROM_BANK_2 as ubyte =$80
-const LAYER2_ACCESS_OVER_ROM_48K as ubyte =$C0
-const SPRITE_STATUS_SLOT_SELECT_P_303B as uinteger =$303B
-const SPRITE_STATUS_MAXIMUM_SPRITES as ubyte =$02
-const SPRITE_STATUS_COLLISION as ubyte =$01
-const SPRITE_SLOT_SELECT_PATTERN_HALF as ubyte =128
-const SPRITE_ATTRIBUTE_P_57 as ubyte =$57
-const SPRITE_PATTERN_P_5B as ubyte =$5B
-const TURBO_SOUND_CONTROL_P_FFFD as uinteger =$FFFD
-const MACHINE_ID_NR_00 as ubyte =$00
-const NEXT_VERSION_NR_01 as ubyte =$01
-const NEXT_RESET_NR_02 as ubyte =$02
-const MACHINE_TYPE_NR_03 as ubyte =$03
-const ROM_MAPPING_NR_04 as ubyte =$04
-const PERIPHERAL_1_NR_05 as ubyte =$05
-const PERIPHERAL_2_NR_06 as ubyte =$06
-const TURBO_CONTROL_NR_07 as ubyte =$07
-const PERIPHERAL_3_NR_08 as ubyte =$08
-const PERIPHERAL_4_NR_09 as ubyte =$09
-const PERIPHERAL_5_NR_0A as ubyte =$0A
-const NEXT_VERSION_MINOR_NR_0E as ubyte =$0E
-const ANTI_BRICK_NR_10 as ubyte =$10
-const VIDEO_TIMING_NR_11 as ubyte =$11
-const LAYER2_RAM_BANK_NR_12 as ubyte =$12
-const LAYER2_RAM_SHADOW_BANK_NR_13 as ubyte =$13
-const GLOBAL_TRANSPARENCY_NR_14 as ubyte =$14
-const SPRITE_CONTROL_NR_15 as ubyte =$15
-const LAYER2_XOFFSET_NR_16 as ubyte =$16
-const LAYER2_YOFFSET_NR_17 as ubyte =$17
-const CLIP_LAYER2_NR_18 as ubyte =$18
-const CLIP_SPRITE_NR_19 as ubyte =$19
-const CLIP_ULA_LORES_NR_1A as ubyte =$1A
-const CLIP_TILEMAP_NR_1B as ubyte =$1B
-const CLIP_WINDOW_CONTROL_NR_1C as ubyte =$1C
-const VIDEO_LINE_MSB_NR_1E as ubyte =$1E
-const VIDEO_LINE_LSB_NR_1F as ubyte =$1F
-const VIDEO_INTERUPT_CONTROL_NR_22 as ubyte =$22
-const VIDEO_INTERUPT_VALUE_NR_23 as ubyte =$23
-const ULA_XOFFSET_NR_26 as ubyte =$26
-const ULA_YOFFSET_NR_27 as ubyte =$27
-const HIGH_ADRESS_KEYMAP_NR_28 as ubyte =$28
-const LOW_ADRESS_KEYMAP_NR_29 as ubyte =$29
-const HIGH_DATA_TO_KEYMAP_NR_2A as ubyte =$2A
-const LOW_DATA_TO_KEYMAP_NR_2B as ubyte =$2B
-const DAC_B_MIRROR_NR_2C as ubyte =$2C
-const DAC_AD_MIRROR_NR_2D as ubyte =$2D
-const SOUNDDRIVE_DF_MIRROR_NR_2D as ubyte =$2D
-const DAC_C_MIRROR_NR_2E as ubyte =$2E
-const TILEMAP_XOFFSET_MSB_NR_2F as ubyte =$2F
-const TILEMAP_XOFFSET_LSB_NR_30 as ubyte =$30
-const TILEMAP_YOFFSET_NR_31 as ubyte =$31
-const LORES_XOFFSET_NR_32 as ubyte =$32
-const LORES_YOFFSET_NR_33 as ubyte =$33
-const SPRITE_ATTR_SLOT_SEL_NR_34 as ubyte =$34
-const SPRITE_ATTR0_NR_35 as ubyte =$35
-const SPRITE_ATTR1_NR_36 as ubyte =$36
-const SPRITE_ATTR2_NR_37 as ubyte =$37
-const SPRITE_ATTR3_NR_38 as ubyte =$38
-const SPRITE_ATTR4_NR_39 as ubyte =$39
-const PALETTE_INDEX_NR_40 as ubyte =$40
-const PALETTE_VALUE_NR_41 as ubyte =$41
-const PALETTE_FORMAT_NR_42 as ubyte =$42
-const PALETTE_CONTROL_NR_43 as ubyte =$43
-const PALETTE_VALUE_9BIT_NR_44 as ubyte =$44
-const TRANSPARENCY_FALLBACK_COL_NR_4A as ubyte =$4A
-const SPRITE_TRANSPARENCY_I_NR_4B as ubyte =$4B
-const TILEMAP_TRANSPARENCY_I_NR_4C as ubyte =$4C
-const MMU0_0000_NR_50 as ubyte =$50
-const MMU1_2000_NR_51 as ubyte =$51
-const MMU2_4000_NR_52 as ubyte =$52
-const MMU3_6000_NR_53 as ubyte =$53
-const MMU4_8000_NR_54 as ubyte =$54
-const MMU5_A000_NR_55 as ubyte =$55
-const MMU6_C000_NR_56 as ubyte =$56
-const MMU7_E000_NR_57 as ubyte =$57
-const COPPER_DATA_NR_60 as ubyte =$60
-const COPPER_CONTROL_LO_NR_61 as ubyte =$61
-const COPPER_CONTROL_HI_NR_62 as ubyte =$62
-const COPPER_DATA_16B_NR_63 as ubyte =$63
-const VIDEO_LINE_OFFSET_NR_64 as ubyte =$64
-const ULA_CONTROL_NR_68 as ubyte =$68
-const DISPLAY_CONTROL_NR_69 as ubyte =$69
-const LORES_CONTROL_NR_6A as ubyte =$6A
-const TILEMAP_CONTROL_NR_6B as ubyte =$6B
-const TILEMAP_DEFAULT_ATTR_NR_6C as ubyte =$6C
-const TILEMAP_BASE_ADR_NR_6E as ubyte =$6E
-const TILEMAP_GFX_ADR_NR_6F as ubyte =$6F
-const LAYER2_CONTROL_NR_70 as ubyte =$70
-const LAYER2_XOFFSET_MSB_NR_71 as ubyte =$71
-const SPRITE_ATTR0_INC_NR_75 as ubyte =$75
-const SPRITE_ATTR1_INC_NR_76 as ubyte =$76
-const SPRITE_ATTR2_INC_NR_77 as ubyte =$77
-const SPRITE_ATTR3_INC_NR_78 as ubyte =$78
-const SPRITE_ATTR4_INC_NR_79 as ubyte =$79
-const USER_STORAGE_0_NR_7F as ubyte =$7F
-const EXPANSION_BUS_ENABLE_NR_80 as ubyte =$80
-const EXPANSION_BUS_CONTROL_NR_81 as ubyte =$81
-const INTERNAL_PORT_DECODING_0_NR_82 as ubyte =$82
-const INTERNAL_PORT_DECODING_1_NR_83 as ubyte =$83
-const INTERNAL_PORT_DECODING_2_NR_84 as ubyte =$84
-const INTERNAL_PORT_DECODING_3_NR_85 as ubyte =$85
-const EXPANSION_BUS_DECODING_0_NR_86 as ubyte =$86
-const EXPANSION_BUS_DECODING_1_NR_87 as ubyte =$87
-const EXPANSION_BUS_DECODING_2_NR_88 as ubyte =$88
-const EXPANSION_BUS_DECODING_3_NR_89 as ubyte =$89
-const EXPANSION_BUS_PROPAGATE_NR_8A as ubyte =$8A
-const ALTERNATE_ROM_NR_8C as ubyte =$8C
-const ZX_MEM_MAPPING_NR_8E as ubyte =$8E
-const PI_GPIO_OUT_ENABLE_0_NR_90 as ubyte =$90
-const PI_GPIO_OUT_ENABLE_1_NR_91 as ubyte =$91
-const PI_GPIO_OUT_ENABLE_2_NR_92 as ubyte =$92
-const PI_GPIO_OUT_ENABLE_3_NR_93 as ubyte =$93
-const PI_GPIO_0_NR_98 as ubyte =$98
-const PI_GPIO_1_NR_99 as ubyte =$99
-const PI_GPIO_2_NR_9A as ubyte =$9A
-const PI_GPIO_3_NR_9B as ubyte =$9B
-const PI_PERIPHERALS_ENABLE_NR_A0 as ubyte =$A0
-const PI_I2S_AUDIO_CONTROL_NR_A2 as ubyte =$A2
-const ESP_WIFI_GPIO_OUTPUT_NR_A8 as ubyte =$A8
-const ESP_WIFI_GPIO_NR_A9 as ubyte =$A9
-const EXTENDED_KEYS_0_NR_B0 as ubyte =$B0
-const EXTENDED_KEYS_1_NR_B1 as ubyte =$B1
-const DEBUG_LED_CONTROL_NR_FF as ubyte =$FF
-const MEM_ROM_CHARS_3C00 as uinteger =$3C00
-const MEM_ZX_SCREEN_4000 as uinteger =$4000
-const MEM_ZX_ATTRIB_5800 as uinteger =$5800
-const MEM_LORES0_4000 as uinteger =$4000
-const MEM_LORES1_6000 as uinteger =$6000
-const MEM_TIMEX_SCR0_4000 as uinteger =$4000
-const MEM_TIMEX_SCR1_6000 as uinteger =$6000
-const COPPER_NOOP as ubyte =%00000000
-const COPPER_WAIT_H as ubyte =%10000000
-const COPPER_HALT_B as ubyte =$FF
-const DMA_RESET as ubyte =$C3
-const DMA_RESET_PORT_A_TIMING as ubyte =$C7
-const DMA_RESET_PORT_B_TIMING as ubyte =$CB
-const DMA_LOAD as ubyte =$CF
-const DMA_CONTINUE as ubyte =$D3
-const DMA_DISABLE_INTERUPTS as ubyte =$AF
-const DMA_ENABLE_INTERUPTS as ubyte =$AB
-const DMA_RESET_DISABLE_INTERUPTS as ubyte =$A3
-const DMA_ENABLE_AFTER_RETI as ubyte =$B7
-const DMA_READ_STATUS_BYTE as ubyte =$BF
-const DMA_REINIT_STATUS_BYTE as ubyte =$8B
-const DMA_START_READ_SEQUENCE as ubyte =$A7
-const DMA_FORCE_READY as ubyte =$B3
-const DMA_DISABLE as ubyte =$83
-const DMA_ENABLE as ubyte =$87
-const DMA_READ_MASK_FOLLOWS as ubyte =$BB
-const ULA_PALETTE_P1  as ubyte =%000<<4
-const ULA_PALETTE_P2  as ubyte =%100<<4
-const L2_PALETTE_P1   as ubyte =%001<<4
-const L2_PALETTE_P2   as ubyte =%101<<4
-const SPR_PALETTE_P1  as ubyte =%010<<4
-const SPR_PALETTE_P2  as ubyte =%110<<4
-const TILE_PALETTE_P1 as ubyte =%011<<4
-const TILE_PALETTE_P2 as ubyte =%111<<4
-const F_OPEN            as ubyte = $9a
-const M_GETSETDRV       as ubyte = $89
-const F_CLOSE           as ubyte = $9b
-const F_READ            as ubyte = $9d
-const F_WRITE           as ubyte = $9e
-const F_SEEK            as ubyte = $9f
-const F_STAT            as ubyte = $a1 
-const F_SIZE            as ubyte = $ac
-const FA_READ           as ubyte = $01
-const FA_APPEND         as ubyte = $06
-const FA_OVERWRITE      as ubyte = $0C
-const LAYER2_ACCESS_PORT  as UINTEGER = $123B
+#include <nb_constants.bas>
 
 #ifdef AYFX
     #DEFINE AYFX_ENABLED
